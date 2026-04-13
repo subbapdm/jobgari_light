@@ -8,7 +8,7 @@ const Create = () => {
         </div>
 
         <div className="bg-white rounded-xl">
-
+          
         </div>
     </div>
   )
