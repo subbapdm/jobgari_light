@@ -7,7 +7,7 @@
     "dev": "nodemon",
     "build": "tsc",
     "start": "node dist/index.js",
-    "seed:users": "ts-node src/seeders/userSeeder.ts"
+    "seed:all": "ts-node src/seeders/seeder.ts"
   },
   "author": "",
   "license": "ISC",

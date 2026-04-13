@@ -3,10 +3,12 @@ dotenv.config();
 
 import express from "express";
 import cors from "cors";
+import connectDB from "./config/connectDB";
 
 import jobRoutes from "./routes/jobRoutes";
 import userRoutes from "./routes/userRoutes";
-import connectDB from "./config/connectDB";
+import categoryRoutes from "./routes/categoryRoutes";
+import locationRoutes from "./routes/locationRoutes";
 
 const app = express();
 
@@ -17,7 +19,8 @@ app.use(cors({
 
 app.use("/api/jobs", jobRoutes);
 app.use("/api/users", userRoutes);
-
+app.use("/api/categories", categoryRoutes);
+app.use("/api/locations", locationRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {

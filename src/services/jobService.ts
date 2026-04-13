@@ -6,8 +6,15 @@ import type { ApiResponse } from "@/types/api.types";
 export class JobsService extends ApiClient {
 
    /**
+    * Get all jobs
+   */
+   async getJobs(): Promise<ApiResponse>{
+      return this.request("/jobs");
+   }
+
+   /**
     * Create a new job
-    */
+   */
    async createJob(data: JobFormData): Promise<ApiResponse> {
       return this.request("/jobs", {
          method: "POST",

@@ -1,4 +1,4 @@
-import { useState, type KeyboardEvent } from "react";
+import { useEffect, useState, type KeyboardEvent } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,6 +20,10 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { jobsService } from "@/services/jobService";
 import { toast } from "sonner";
+import type { Category } from "@/types/category";
+import type { Location } from "@/types/location";
+import { categoryService } from "@/services/categoryService";
+import { locationService } from "@/services/locationService";
 
 
 
@@ -44,6 +48,26 @@ export type JobFormData = z.infer<typeof jobSchema>;
 const Create = () => {
    const [skillInput, setSkillInput] = useState("");
    const [isSubmitting, setIsSubmitting] = useState(false);
+   const [categories, setCategories] = useState<Category[]>([]);
+   const [locations, setLocations] = useState<Location[]>([]);
+
+   useEffect(() => {
+      const fetchData = async () => {
+         try {
+            const [ catData, locData] = await Promise.all([
+               categoryService.getCategories(),
+               locationService.getLocations()
+            ]);
+
+            setCategories(catData.categories);
+            setLocations(locData.locations)
+         } catch (err: any) {
+            toast.error("Failed to fetch data", err);
+         }
+      };
+
+      fetchData();
+   }, []);
 
   const {
     register,
@@ -143,11 +167,9 @@ const Create = () => {
                         <SelectContent>
                            <SelectGroup>
                               <SelectLabel>Categories</SelectLabel>
-                              <SelectItem value="it">IT</SelectItem>
-                              <SelectItem value="restaurants">Restaurants</SelectItem>
-                              <SelectItem value="banking">Banking</SelectItem>
-                              <SelectItem value="schools">Schools</SelectItem>
-                              <SelectItem value="shops">Shops</SelectItem>
+                              {categories.map((cat) => (
+                                 <SelectItem key={cat._id} value={cat._id}>{cat.name}</SelectItem>
+                              ))}
                            </SelectGroup>
                         </SelectContent>
                         </Select>
@@ -175,11 +197,9 @@ const Create = () => {
                         <SelectContent>
                            <SelectGroup>
                               <SelectLabel>Locations</SelectLabel>
-                              <SelectItem value="it">IT</SelectItem>
-                              <SelectItem value="restaurants">Restaurants</SelectItem>
-                              <SelectItem value="banking">Banking</SelectItem>
-                              <SelectItem value="schools">Schools</SelectItem>
-                              <SelectItem value="shops">Shops</SelectItem>
+                              {locations.map((loc) => (
+                                 <SelectItem key={loc._id} value={loc._id}>{loc.city}</SelectItem>
+                              ))}
                            </SelectGroup>
                         </SelectContent>
                         </Select>

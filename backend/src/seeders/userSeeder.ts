@@ -1,7 +1,3 @@
-import dotenv from "dotenv";
-dotenv.config();
-
-import connectDB from "../config/connectDB";
 import User from "../models/User";
 import bcrypt from "bcryptjs";
 
@@ -30,10 +26,8 @@ const users = [
    }
 ];
 
-const seedUser = async () => {
+export const seedUsers = async () => {
    try {
-      await connectDB();
-
       await User.deleteMany({});
 
       const hashedUsers = await Promise.all(
@@ -45,12 +39,8 @@ const seedUser = async () => {
 
       await User.insertMany(hashedUsers);
       console.log("Users seeded successfully!");
-
-      process.exit(0);
    } catch (err) {
       console.error("Seeder error:", err);
-      process.exit(1);
+      throw err;
    }
 };
-
-seedUser();
