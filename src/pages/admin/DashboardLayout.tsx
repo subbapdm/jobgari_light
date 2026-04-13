@@ -42,7 +42,7 @@ const DashboardLayout = () => {
         )}
 
       <main className="flex-1">
-        <Navbar handleToggle={handleToggle}/>
+        <Navbar handleToggle={handleToggle} isCollapsed={isCollapsed}/>
         <div className="p-8">
           <Outlet />
         </div>

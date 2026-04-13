@@ -3,8 +3,8 @@ import Home from "./pages/Home"
 import DashboardLayout from "./pages/admin/DashboardLayout"
 import Dashboard from "./pages/admin/Dashboard"
 import Users from "./pages/admin/users/Users"
-import Jobs from "./pages/admin/jobs/jobs"
 import Create from "./pages/admin/jobs/Create"
+import Jobs from "./pages/admin/jobs/Jobs"
 
 function App() {
 
