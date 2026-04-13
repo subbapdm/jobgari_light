@@ -5,11 +5,13 @@ import Dashboard from "./pages/admin/Dashboard"
 import Users from "./pages/admin/users/Users"
 import Create from "./pages/admin/jobs/Create"
 import Jobs from "./pages/admin/jobs/Jobs"
+import { Toaster } from "./components/ui/sonner"
 
 function App() {
 
    return (
       <BrowserRouter>
+         <Toaster />
          <Routes>
             <Route path="/" element={<Home />} />
 

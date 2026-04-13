@@ -59,7 +59,9 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
             <div>
                <Button className="min-h-12 w-full rounded-none">
                   <LogOut />
-                  Logout
+                  {!isCollapsed && (
+                     <span>Logout</span>
+                  ) }
                </Button>
             </div>
          </>
