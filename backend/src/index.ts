@@ -9,13 +9,18 @@ import jobRoutes from "./routes/jobRoutes";
 import userRoutes from "./routes/userRoutes";
 import categoryRoutes from "./routes/categoryRoutes";
 import locationRoutes from "./routes/locationRoutes";
+import authRoutes from "./routes/authRoutes";
 
 const app = express();
 
-app.use(express.json());
 app.use(cors({
-   origin: 'http://localhost:5173'
+   origin: 'http://localhost:5173',
+   credentials: true
 }));
+
+app.use(express.json());
+
+app.use("/api/auth", authRoutes);
 
 app.use("/api/jobs", jobRoutes);
 app.use("/api/users", userRoutes);

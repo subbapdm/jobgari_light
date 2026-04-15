@@ -6,6 +6,9 @@ import Users from "./pages/admin/users/Users"
 import Create from "./pages/admin/jobs/Create"
 import Jobs from "./pages/admin/jobs/Jobs"
 import { Toaster } from "./components/ui/sonner"
+import Companies from "./pages/admin/companies/Companies"
+import SignIn from "./pages/auth/SignIn"
+import SignUp from "./pages/auth/SignUp"
 
 function App() {
 
@@ -14,6 +17,8 @@ function App() {
          <Toaster />
          <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/sign-up" element={<SignUp />} />
 
             <Route path="/admin" element={<DashboardLayout />}>
                <Route index element={<Navigate to="dashboard" replace />} />
@@ -21,6 +26,7 @@ function App() {
                <Route path="jobs" element={<Jobs />} />
                <Route path="jobs/create" element={<Create />} />
                <Route path="users" element={<Users />} />
+               <Route path="companies" element={<Companies />} />
             </Route>
          </Routes>
       </BrowserRouter>

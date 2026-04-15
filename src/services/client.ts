@@ -12,6 +12,7 @@ export class ApiClient {
          headers: {
             "Content-Type": "application/json"
          },
+         credentials: "include",
          ...options,
       })
 

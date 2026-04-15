@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Briefcase, LayoutDashboard, LogOut, Users } from "lucide-react";
+import { Briefcase, Building2, LayoutDashboard, LogOut, Users } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 const NAV_LINKS = [
@@ -13,6 +13,11 @@ const NAV_LINKS = [
       label: "Jobs",
       href: "/admin/jobs",
       icon: Briefcase
+   },
+   {
+      label: "Companies",
+      href: "/admin/companies",
+      icon: Building2
    },
    {
       label: "Users",
