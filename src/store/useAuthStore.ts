@@ -84,6 +84,7 @@ const useAuthStore = create<AuthState>()(
                   isAuthenticated: false,
                   loading: false
                });
+               localStorage.removeItem("auth-store");
             } catch (err) {
                set({ loading: false });
                throw err;

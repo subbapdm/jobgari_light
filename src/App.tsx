@@ -5,13 +5,11 @@ import useAuthStore from "./store/useAuthStore";
 import { useEffect } from "react";
 
 function App() {
-   const { user, isAuthenticated, AuthCheck } = useAuthStore();
+   // const { AuthCheck } = useAuthStore();
 
-   useEffect(() => {
-      if(isAuthenticated && !user){
-         AuthCheck();
-      }
-   }, []);
+   // useEffect(() => {
+   //    AuthCheck()
+   // }, []);
 
    return (
       <BrowserRouter>

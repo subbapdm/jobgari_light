@@ -78,7 +78,7 @@ const SignIn = () => {
 
                   <div>
                      <Button type="submit" className="min-h-12 w-full">
-                        {submitting ? "Submiting..." : "Sign Up"}
+                        {submitting ? "Submiting..." : "Sign In"}
                      </Button>
                   </div>
                </form>

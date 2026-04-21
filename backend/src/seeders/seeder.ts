@@ -6,6 +6,7 @@ import connectDB from "../config/connectDB";
 import { seedUsers } from "./userSeeder";
 import { seedCategories } from "./categorySeeker";
 import { seedLocations } from "./locationSeeder";
+import { seedCompanies } from "./companySeeder";
 
 const runSeeders = async () => {
    try {
@@ -13,6 +14,7 @@ const runSeeders = async () => {
 
       // Run all seeders
       await seedUsers();
+      await seedCompanies();
       await seedCategories();
       await seedLocations();
 
