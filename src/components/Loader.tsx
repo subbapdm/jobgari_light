@@ -1,11 +1,10 @@
-import { Loader2 } from "lucide-react"
 
 const Loader = () => {
    return (
-      <div className="flex items-center justify-center">
-         <Loader2 className="size-5 animate-spin" />
+      <div className="flex items-center justify-center min-h-screen">
+         <div className="animate-spin rounded-full h-12 w-12 border-2 border-gray-500" />
       </div>
    )
 }
 
-export default Loader
+export default Loader;

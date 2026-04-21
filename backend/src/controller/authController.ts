@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 
 import User from "../models/User";
 import { generateToken } from "../utils/generateToken";
+import type { AuthRequest } from "../middleware/authMiddleware";
 
 
 /**
@@ -25,7 +26,13 @@ export const SignUp = async (req: Request, res: Response) => {
 
       res.status(201).json({
          message: "Account created successfully.",
-      })
+         user: {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role
+         }
+      });
    } catch (err) {
       console.error("[SignUP]", err);
       res.status(500).json({ message: "Internal server error" });
@@ -61,6 +68,76 @@ export const SignIn = async (req: Request, res: Response) => {
       })
    } catch (err) {
       console.error("[SignIn]", err);
+      res.status(500).json({ message: "Internal server error" });
+   }
+}
+
+/**
+ * @des Get current user
+ * @route GET /api/auth/me
+ * @access Private
+ */
+export const getMe = async (req: AuthRequest, res: Response) => {
+   try {
+      res.json({
+         user: {
+            _id: req.user?._id,
+            email: req.user?.email,
+            name: req.user?.name,
+            role: req.user?.role
+         }
+      });
+   } catch (err) {
+      console.error("[GetMe]", err);
+      res.status(500).json({ message: "Internal server error" });
+   }
+};
+
+
+/**
+ * @des Logout user
+ * @route POST /api/auth/logout
+ * @access Private
+ */
+export const logout = async (req: Request, res: Response) => {
+   try {
+      res.cookie("token", "", {
+         httpOnly: true,
+         expires: new Date(0)
+      });
+
+      res.status(200).json({
+         message: "Logged out successfully"
+      })
+   } catch (err) {
+      console.log("[Logout]", err);
+      res.status(500).json({ message: "Internal server error" });
+   }
+}
+
+/**
+ * @desc Refresh seesion
+ * @route POST /api/auth/refresh
+ * @access Private (cookie-based)
+ */
+export const refresh = async (req: AuthRequest, res: Response) => {
+   try {
+      if(!req.user){
+         return res.status(401).json({ message: "Not authenticated" });
+      }
+
+      generateToken(res, req.user._id.toString());
+
+      res.json({
+         user: {
+            _id: req.user._id,
+            email: req.user.email,
+            name: req.user.name,
+            role: req.user.role
+         }
+      });
+   } catch (err) {
+      console.error("[Refresh]", err);
       res.status(500).json({ message: "Internal server error" });
    }
 }

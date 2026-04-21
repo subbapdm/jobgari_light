@@ -6,9 +6,9 @@ import z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { authService } from "@/services/authService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import useAuthStore from "@/store/useAuthStore";
 
 const signinSchema = z.object({
    email: z.email(),
@@ -21,6 +21,8 @@ const SignIn = () => {
    const [submitting, setSubmitting] = useState(false);
    const navigate = useNavigate();
 
+   const { SignIn } = useAuthStore();
+
    const { register, handleSubmit, formState: { errors } } = useForm({
       resolver: zodResolver(signinSchema),
       defaultValues: {
@@ -31,10 +33,9 @@ const SignIn = () => {
 
    const onSubmit = async (data: SignInData) => {
       setSubmitting(true);
-
       try {
-         const result = await authService.SignIn(data);
-         toast.success(result.message);
+         await SignIn(data);
+         toast.success("Signed in successfully");
          navigate("/admin");
       } catch (err) {
          toast.error(err instanceof Error ? err.message : "Something went wrong.");

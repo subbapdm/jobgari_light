@@ -13,8 +13,8 @@ export class ApiClient {
             "Content-Type": "application/json"
          },
          credentials: "include",
-         ...options,
-      })
+         ...options
+      });
 
       if(!response.ok){
          const error = await response.json();

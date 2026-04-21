@@ -3,6 +3,7 @@ dotenv.config();
 
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import connectDB from "./config/connectDB";
 
 import jobRoutes from "./routes/jobRoutes";
@@ -12,7 +13,7 @@ import locationRoutes from "./routes/locationRoutes";
 import authRoutes from "./routes/authRoutes";
 
 const app = express();
-
+app.use(cookieParser());
 app.use(cors({
    origin: 'http://localhost:5173',
    credentials: true

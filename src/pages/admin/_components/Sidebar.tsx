@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import useAuthStore from "@/store/useAuthStore";
 import { Briefcase, Building2, LayoutDashboard, LogOut, Users } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -33,6 +34,8 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
    const location = useLocation();
    const pathname = location.pathname;
 
+   const { Logout } = useAuthStore();
+
    return (
          <>
             <div className={cn("min-h-14 border-b border-slate-200 flex items-center px-4", isCollapsed && "justify-center")}>
@@ -62,7 +65,7 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
             </nav>
 
             <div>
-               <Button className="min-h-12 w-full rounded-none">
+               <Button onClick={() => Logout()} className="min-h-12 w-full rounded-none">
                   <LogOut />
                   {!isCollapsed && (
                      <span>Logout</span>

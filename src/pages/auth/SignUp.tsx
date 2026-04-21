@@ -8,8 +8,8 @@ import z from "zod";
 import FormRadioGroup from "@/components/FormRadioGroup";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { authService } from "@/services/authService";
-import { Button } from "@/src/components/ui/button";
+import { Button } from "@/components/ui/button";
+import useAuthStore from "@/store/useAuthStore";
 
 const signupSchema = z.object({
    name: z
@@ -28,6 +28,7 @@ export type SignUpData = z.infer<typeof signupSchema>
 const SignUp = () => {
    const [submitting, setSubmitting] = useState(false);
    const navigate = useNavigate();
+   const { SignUp } = useAuthStore();
 
    const { register, control, handleSubmit, formState: { errors }} = useForm<SignUpData>({
       resolver: zodResolver(signupSchema),
@@ -43,7 +44,7 @@ const SignUp = () => {
       setSubmitting(true);
 
       try {
-         const result = await authService.SignUp(data);
+         const result = await SignUp(data);
          toast.success(result.message);
          navigate("/sign-in");
       } catch (err) {
