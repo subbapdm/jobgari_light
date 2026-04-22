@@ -11,4 +11,10 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    watch: {
+      // Stop Vite from watching the backend/ folder to prevent HMR on backend changes
+      ignored: ['**/backend/**']
+    }
+  }
 })

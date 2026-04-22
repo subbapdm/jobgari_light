@@ -40,6 +40,6 @@ export const createJob = async (req: AuthRequest, res: Response) => {
 
       res.status(201).json({ message: "Job created successfully", job });
    } catch (err) {
-      res.status(500).json({ message: "Interna server error" });
+      res.status(500).json({ message: "Internal server error" });
    }
 };
