@@ -16,7 +16,7 @@ const Navbar = ({ handleToggle, isCollapsed }: NavbarProps) => {
    }
    
    return (
-      <header className="bg-white flex items-center justify-between min-h-14 border-b border-slate-200 px-5">
+      <header className="bg-white flex items-center justify-between min-h-14 border-b border-slate-100 px-5">
          <Button onClick={handleToggle} variant="ghost" size="icon" className="border border-gray-200 text-gray-500">
             <ChevronLeft className={`h-5 w-5 transition-transform duration-400 ${isCollapsed && "rotate-180"}`} />
          </Button>

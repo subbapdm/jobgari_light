@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import z from "zod";
 
@@ -44,8 +44,8 @@ const SignUp = () => {
       setSubmitting(true);
 
       try {
-         const result = await SignUp(data);
-         toast.success(result.message);
+         await SignUp(data);
+         toast.success("Signup successfully!");
          navigate("/sign-in");
       } catch (err) {
          toast.error("Something went wrong. Please try again.");
@@ -57,7 +57,7 @@ const SignUp = () => {
    return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
          <div className="min-w-md bg-white p-8 rounded-lg border border-slate-200">
-            <div className="mb-5">
+            <div className="mb-5 space-y-1">
                <h2 className="text-xl font-bold">Sign Up</h2>
                <p className="text-slate-500 text-sm">Create your account to get started.</p>
             </div>
@@ -65,7 +65,7 @@ const SignUp = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                
                <div className="space-y-2">
-                  <Label htmlFor="name" className="text-sm font-semibold text-slate-600">Full Name</Label>
+                  <Label htmlFor="name" className="text-[0.8rem] font-semibold text-slate-600">Full Name</Label>
                   <Input
                      id="name"
                      {...register("name")}
@@ -75,7 +75,7 @@ const SignUp = () => {
                   {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
                </div>
                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-sm font-semibold text-slate-600">Email</Label>
+                  <Label htmlFor="email" className="text-[0.8rem] font-semibold text-slate-600">Email</Label>
                   <Input
                      id="email"
                      {...register("email")}
@@ -85,7 +85,7 @@ const SignUp = () => {
                   {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
                </div>
                <div className="space-y-2">
-                  <Label htmlFor="password" className="text-sm font-semibold text-slate-600">Email</Label>
+                  <Label htmlFor="password" className="text-[0.8rem] font-semibold text-slate-600">Email</Label>
                   <Input
                      id="password"
                      type="password"
@@ -96,7 +96,7 @@ const SignUp = () => {
                   {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
                </div>
                <div className="space-y-2">
-                  <Label htmlFor="role" className="text-sm font-semibold text-slate-600">I am a...</Label>
+                  <Label className="text-[0.8rem] font-semibold text-slate-600">I am a...</Label>
                   <FormRadioGroup
                      control={control}
                      name="role"
@@ -108,11 +108,13 @@ const SignUp = () => {
                   {errors.role && <p className="text-xs text-red-500">{errors.role.message}</p>}
                </div>
 
-               <div>
-                  <Button type="submit" className="min-h-12 w-full">
-                     {submitting ? "Submiting..." : "Sign Up"}
-                  </Button>
-               </div>
+               <div className="space-y-4">
+                     <Button type="submit" className="min-h-12 w-full bg-teal-600 hover:bg-teal-700">
+                        {submitting ? "Submiting..." : "Sign Up"}
+                     </Button>
+
+                     <p className="text-sm text-gray-500">Already have an account? <Link to="/sign-in" className="text-teal-500">Sign In</Link></p>
+                  </div>
             </form>
          </div>
       </div>

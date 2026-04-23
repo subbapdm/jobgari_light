@@ -6,7 +6,7 @@ import z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import useAuthStore from "@/store/useAuthStore";
 
@@ -47,15 +47,15 @@ const SignIn = () => {
    return (
          <div className="min-h-screen bg-slate-50 flex items-center justify-center">
             <div className="min-w-md bg-white p-8 rounded-lg border border-slate-200">
-               <div className="mb-5">
-                  <h2 className="text-xl font-bold">Sign Up</h2>
-                  <p className="text-slate-500 text-sm">Create your account to get started.</p>
+               <div className="mb-5 space-y-1">
+                  <h2 className="text-xl font-bold">Sign In</h2>
+                  <p className="text-slate-500 text-sm">Enter your credentials to access your account.</p>
                </div>
 
                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                   
                   <div className="space-y-2">
-                     <Label htmlFor="email" className="text-sm font-semibold text-slate-600">Email</Label>
+                     <Label htmlFor="email" className="text-[0.8rem] font-semibold text-slate-600">Email</Label>
                      <Input
                         id="email"
                         {...register("email")}
@@ -65,7 +65,7 @@ const SignIn = () => {
                      {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
                   </div>
                   <div className="space-y-2">
-                     <Label htmlFor="password" className="text-sm font-semibold text-slate-600">Email</Label>
+                     <Label htmlFor="password" className="text-[0.8rem] font-semibold text-slate-600">Email</Label>
                      <Input
                         id="password"
                         type="password"
@@ -76,10 +76,12 @@ const SignIn = () => {
                      {errors.password && <p className="text-xs text-red-500">{errors.password.message}</p>}
                   </div>
 
-                  <div>
-                     <Button type="submit" className="min-h-12 w-full">
+                  <div className="space-y-4">
+                     <Button type="submit" className="min-h-12 w-full bg-teal-600 hover:bg-teal-700">
                         {submitting ? "Submiting..." : "Sign In"}
                      </Button>
+
+                     <p className="text-sm text-gray-500">Don't have an account? <Link to="/sign-up" className="text-teal-500">Sign Up</Link></p>
                   </div>
                </form>
             </div>
