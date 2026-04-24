@@ -148,8 +148,9 @@ const Create = () => {
             className="space-y-4"
          >
             <div className="grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-6">
+               {/* LEFT */}
                <div className="min-w-0">
-                  <section className="bg-white p-6 border border-gray-200">
+                  <section className="bg-white p-5 border border-gray-200 space-y-6">
                      <div className="space-y-2">
                         <Label htmlFor="title" className="text-gray-700">
                            Job Title
@@ -280,7 +281,8 @@ const Create = () => {
 
                   </section>
                </div>
-
+               
+               {/* RIGHT */}
                <aside className="xl:sticky xl:top-28 xl:self-start">
                   <section className="bg-white p-5 border border-gray-200 space-y-6">
 
