@@ -11,6 +11,7 @@ import userRoutes from "./routes/userRoutes";
 import categoryRoutes from "./routes/categoryRoutes";
 import locationRoutes from "./routes/locationRoutes";
 import authRoutes from "./routes/authRoutes";
+import companyRoutes from "./routes/companyRoutes";
 
 const app = express();
 app.use(cookieParser());
@@ -27,6 +28,7 @@ app.use("/api/jobs", jobRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/locations", locationRoutes);
+app.use("/api/companies", companyRoutes);
 
 // Health check
 app.get("/api/health", (req, res) => {
