@@ -158,7 +158,7 @@ const Create = () => {
                            id="title"
                            placeholder="e.g. Frontent Developer"
                            {...register("title")}
-                           className="min-h-10"
+                           className="min-h-11"
                         />
                         {errors.title && (
                            <p className="text-sm text-red-500">{errors.title.message}</p>
@@ -172,7 +172,7 @@ const Create = () => {
                            id="title"
                            placeholder="e.g. Frontent Developer"
                            {...register("title")}
-                           className="min-h-10"
+                           className="min-h-11"
                         />
                         {errors.title && (
                            <p className="text-sm text-red-500">{errors.title.message}</p>
@@ -186,7 +186,7 @@ const Create = () => {
                               control={control}
                               render={({ field }) => (
                                  <Select onValueChange={field.onChange} value={field.value}>
-                                 <SelectTrigger id="location" className="w-full min-h-10">
+                                 <SelectTrigger id="location" className="w-full min-h-11">
                                     <SelectValue placeholder="Select a company" />
                                  </SelectTrigger>
                                  <SelectContent>
@@ -213,7 +213,7 @@ const Create = () => {
                               control={control}
                               render={({ field }) => (
                                  <Select onValueChange={field.onChange} value={field.value}>
-                                 <SelectTrigger id="category" className="w-full min-h-10">
+                                 <SelectTrigger id="category" className="w-full min-h-11">
                                     <SelectValue placeholder="Select a Category" />
                                  </SelectTrigger>
                                  <SelectContent>
@@ -240,7 +240,7 @@ const Create = () => {
                               control={control}
                               render={({ field }) => (
                                  <Select onValueChange={field.onChange} value={field.value}>
-                                 <SelectTrigger id="location" className="w-full min-h-10">
+                                 <SelectTrigger id="location" className="w-full min-h-11">
                                     <SelectValue placeholder="Select a location" />
                                  </SelectTrigger>
                                  <SelectContent>
@@ -332,7 +332,7 @@ const Create = () => {
                            control={control}
                            render={({ field }) => (
                               <Select onValueChange={field.onChange} value={field.value}>
-                                 <SelectTrigger id="experience" className="w-full min-h-10">
+                                 <SelectTrigger id="experience" className="w-full min-h-11">
                                        <SelectValue placeholder="Select Experience" />
                                  </SelectTrigger>
                                  <SelectContent>
@@ -362,7 +362,7 @@ const Create = () => {
                            control={control}
                            render={({ field }) => (
                               <Select onValueChange={field.onChange} value={field.value}>
-                              <SelectTrigger id="education" className="w-full min-h-10">
+                              <SelectTrigger id="education" className="w-full min-h-11">
                                  <SelectValue placeholder="Select a mode" />
                               </SelectTrigger>
                               <SelectContent>
@@ -390,7 +390,7 @@ const Create = () => {
                            value={skillInput}
                            onChange={(e) => setSkillInput(e.target.value)}
                            onKeyDown={handleSkillKeyDown}
-                           className="min-h-10"
+                           className="min-h-11"
                            placeholder="Type a skill and press Enter"
                         />
                         {skills.length > 0 && (
