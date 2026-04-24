@@ -434,7 +434,7 @@ const Create = () => {
                         <Button type="submit" variant="outline" className="min-h-12 px-6">
                            Save Draft
                         </Button>
-                        <Button type="submit" className="min-h-12 min-w-1/2">
+                        <Button type="submit" className="min-h-12 min-w-1/2 bg-teal-600 hover:bg-teal-700">
                         Publish Job
                         </Button>
                      </div>
