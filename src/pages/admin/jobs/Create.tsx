@@ -151,8 +151,9 @@ const Create = () => {
          >
             <div className="grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-6">
                {/* LEFT */}
-               <div className="min-w-0">
+               <div className="min-w-0 space-y-6">
                   
+                  <FormSection>
                      <div className="space-y-2">
                         <Label htmlFor="title" className="text-gray-700">
                            Job Title
@@ -238,29 +239,31 @@ const Create = () => {
                            )}
                         </div>
                      </div>
+                  </FormSection>
 
-                     <FormSection
-                        title="Job description"
-                        subtitle="Describe the role and what you're looking for"
-                        icon={Sparkle}
-                        button={<Button type="button" className="text-xs text-teal-700 min-h-9 bg-teal-100"><Sparkle/><span>Generate with AI</span></Button>}
-                     >
-                        <div className="space-y-2">
-                           <Label htmlFor="description" className="peer sr-only">Description</Label>
-                           <Controller
-                              name="description"
-                              control={control}
-                              render={({ field }) => (
-                                 <TextEditor
-                                    value={field.value}
-                                    onChange={field.onChange}
-                                    placeholder="Describe the role, responsibilities, requirements..."
-                                 />
-                              )} 
-                           />
-                        </div>
-                     </FormSection>
+                  <FormSection
+                     title="Job description"
+                     subtitle="Describe the role and what you're looking for"
+                     icon={Sparkle}
+                     button={<Button type="button" className="text-xs text-teal-700 min-h-9 bg-teal-100"><Sparkle/><span>Generate with AI</span></Button>}
+                  >
+                     <div className="space-y-2">
+                        <Label htmlFor="description" className="peer sr-only">Description</Label>
+                        <Controller
+                           name="description"
+                           control={control}
+                           render={({ field }) => (
+                              <TextEditor
+                                 value={field.value}
+                                 onChange={field.onChange}
+                                 placeholder="Describe the role, responsibilities, requirements..."
+                              />
+                           )} 
+                        />
+                     </div>
+                  </FormSection>
 
+                  <FormSection>
                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
                            <Label htmlFor="category">Category</Label>
@@ -317,14 +320,14 @@ const Create = () => {
                            )}
                         </div>
                      </div>
+                  </FormSection>
 
-         
                </div>
                
                {/* RIGHT */}
-               <aside className="xl:sticky xl:top-28 xl:self-start">
-                  <section className="bg-white p-5 border border-gray-200 space-y-6 rounded-md">
+               <aside className="xl:sticky xl:top-28 xl:self-start space-y-6">
 
+                  <FormSection>
                      <div className="space-y-2">
                         <Label htmlFor="jobType">Job Type</Label>
                         
@@ -346,7 +349,6 @@ const Create = () => {
                            </p>
                         )}
                      </div>
-
                      <div className="space-y-2">
                         <Label htmlFor="workMode">Work Mode</Label>
 
@@ -365,7 +367,6 @@ const Create = () => {
                            </p>
                         )}
                      </div>
-
                      <div className="space-y-2">
                         <Label htmlFor="experience">Experience</Label>
                         <Controller
@@ -395,7 +396,6 @@ const Create = () => {
                            </p>
                         )}
                      </div>
-
                      <div className="space-y-2">
                         <Label htmlFor="education">Education</Label>
                         <Controller
@@ -452,8 +452,10 @@ const Create = () => {
                            </p>
                         )}
                      </div>
+                  </FormSection>
 
-                     <div className="my-6">
+                  <FormSection>
+                     <div className="">
                         <div className="flex items-center justify-between py-2">
                            <div>
                               <Label htmlFor="airplane-mode">Featured Post</Label>
@@ -470,7 +472,6 @@ const Create = () => {
                            <Switch id="airplane-mode" />
                         </div>
                      </div>
-
                      <div className="flex items-center justify-between">
                         <Button type="submit" variant="outline" className="min-h-12 px-6">
                            Save Draft
@@ -479,7 +480,8 @@ const Create = () => {
                         Publish Job
                         </Button>
                      </div>
-                  </section>
+                  </FormSection>
+
                </aside>
             </div>
          </form>
