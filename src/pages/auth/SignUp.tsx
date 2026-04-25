@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import z from "zod";
 
-import FormRadioGroup from "@/components/FormRadioGroup";
+import FormRadioGroup from "@/components/form/FormRadioGroup";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";

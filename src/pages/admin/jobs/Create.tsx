@@ -2,7 +2,7 @@ import { useState, type KeyboardEvent } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { X } from "lucide-react";
+import { Sparkle, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -26,8 +26,10 @@ import { categoryService } from "@/services/categoryService";
 import { locationService } from "@/services/locationService";
 import { companyService } from "@/services/companyService";
 import { Switch } from "@/components/ui/switch";
-import FormRadioGroup from "@/components/FormRadioGroup";
-import FormRadioTab from "@/components/FormRadioTab";
+import FormRadioGroup from "@/components/form/FormRadioGroup";
+import FormRadioTab from "@/components/form/FormRadioTab";
+import FormSection from "@/components/form/FormSection";
+import TextEditor from "@/components/form/TextEditor";
 
 
 
@@ -150,7 +152,7 @@ const Create = () => {
             <div className="grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-6">
                {/* LEFT */}
                <div className="min-w-0">
-                  <section className="bg-white p-5 border border-gray-200 space-y-6">
+                  
                      <div className="space-y-2">
                         <Label htmlFor="title" className="text-gray-700">
                            Job Title
@@ -179,7 +181,7 @@ const Create = () => {
                            <p className="text-sm text-red-500">{errors.title.message}</p>
                         )}
                      </div>
-                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
                            <Label htmlFor="company">Company</Label>
                            <Controller
@@ -207,6 +209,59 @@ const Create = () => {
                               </p>
                            )}
                         </div>
+                        
+                        <div className="space-y-2">
+                           <Label htmlFor="location">Dealine</Label>
+                           <Controller
+                              name="location"
+                              control={control}
+                              render={({ field }) => (
+                                 <Select onValueChange={field.onChange} value={field.value}>
+                                 <SelectTrigger id="location" className="w-full min-h-11">
+                                    <SelectValue placeholder="Select a location" />
+                                 </SelectTrigger>
+                                 <SelectContent>
+                                    <SelectGroup>
+                                       <SelectLabel>Locations</SelectLabel>
+                                       {locations.map((loc) => (
+                                          <SelectItem key={loc._id} value={loc._id}>{loc.city}</SelectItem>
+                                       ))}
+                                    </SelectGroup>
+                                 </SelectContent>
+                                 </Select>
+                              )}
+                           />
+                           {errors.location && (
+                              <p className="text-sm text-red-500">
+                                 {errors.location.message}
+                              </p>
+                           )}
+                        </div>
+                     </div>
+
+                     <FormSection
+                        title="Job description"
+                        subtitle="Describe the role and what you're looking for"
+                        icon={Sparkle}
+                        button={<Button type="button" className="text-xs text-teal-700 min-h-9 bg-teal-100"><Sparkle/><span>Generate with AI</span></Button>}
+                     >
+                        <div className="space-y-2">
+                           <Label htmlFor="description" className="peer sr-only">Description</Label>
+                           <Controller
+                              name="description"
+                              control={control}
+                              render={({ field }) => (
+                                 <TextEditor
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    placeholder="Describe the role, responsibilities, requirements..."
+                                 />
+                              )} 
+                           />
+                        </div>
+                     </FormSection>
+
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
                            <Label htmlFor="category">Category</Label>
                            <Controller
@@ -261,30 +316,14 @@ const Create = () => {
                               </p>
                            )}
                         </div>
-                        
                      </div>
 
-                     <div className="space-y-2">
-                        <Label htmlFor="description">Description</Label>
-                        <Textarea
-                           id="description"
-                           placeholder="e.g. Job description"
-                           {...register("description")}
-                           className="min-h-40"
-                        />
-                           {errors.description && (
-                           <p className="text-sm text-red-500">
-                              {errors.description.message}
-                           </p>
-                        )}
-                     </div>
-
-                  </section>
+         
                </div>
                
                {/* RIGHT */}
                <aside className="xl:sticky xl:top-28 xl:self-start">
-                  <section className="bg-white p-5 border border-gray-200 space-y-6">
+                  <section className="bg-white p-5 border border-gray-200 space-y-6 rounded-md">
 
                      <div className="space-y-2">
                         <Label htmlFor="jobType">Job Type</Label>

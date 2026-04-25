@@ -1,6 +1,6 @@
 import { Controller, type Control, type FieldValues, type Path } from "react-hook-form";
-import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
-import { Label } from "./ui/label";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Label } from "../ui/label";
 import { cn } from "@/lib/utils";
 
 type FormRadioTabProps<T extends FieldValues> = {
