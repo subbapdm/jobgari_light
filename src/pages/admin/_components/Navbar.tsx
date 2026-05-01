@@ -22,7 +22,7 @@ const Navbar = ({ handleToggle, isCollapsed }: NavbarProps) => {
          </Button>
          <div className="relative">
             <Button onClick={() => setDropdownOpen(prev => !prev)} size="icon" className="rounded-full">
-               <User />
+               <User className="size-6" />
             </Button>
             {dropdownOpen && (
                <div className="min-w-[150px] bg-white shadow-md absolute right-0 p-5 rounded-sm">

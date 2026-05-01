@@ -24,7 +24,7 @@ const FormRadioTab = <T extends FieldValues>({ control, name, options }: FormRad
                   <div key={value} className="flex-1">
                      <RadioGroupItem value={value} id={value} className="hidden" />
                      <Label htmlFor={value} className={cn("flex items-center justify-center rounded-sm cursor-pointer transition-all peer-data-[state=checked]:bg-white peer-data-[state=checked]:border-teal-500 p-3.5")}>
-                        <span className={cn("text-[0.8rem] text-slate-500 font-semibold", field.value === value && "text-teal-600")}>{label}</span>
+                        <span className={cn("text-[13px] text-slate-500 font-semibold", field.value === value && "text-teal-600")}>{label}</span>
                      </Label>
                   </div>
                ))}

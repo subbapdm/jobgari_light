@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import useAuthStore from "@/store/useAuthStore";
 import { Briefcase, Building2, LayoutDashboard, LogOut, Settings, Users } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const NAV_LINKS = [
    {
@@ -37,9 +37,6 @@ interface SidebarProps {
    isCollapsed: boolean;
 }
 const Sidebar = ({ isCollapsed }: SidebarProps) => {
-   const location = useLocation();
-   const pathname = location.pathname;
-
    const { Logout } = useAuthStore();
 
    return (
@@ -51,15 +48,14 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
             <nav className="flex-1 space-y-1 overflow-y-auto">
                <ul className={cn("p-4 space-y-3", isCollapsed && "p-2")}>
                   {NAV_LINKS.map((item) => {
-                     const isActive = pathname === item.href;
                      return (
                         <li key={item.href} className="text-gray-500">
-                           <Link to={item.href} className={cn("flex items-center gap-2 p-2.5 rounded-md hover:bg-teal-50 hover:text-teal-500 text-sm font-medium", isActive && "bg-teal-50 text-teal-500", isCollapsed && "justify-center")}>
+                           <NavLink to={item.href} className={({ isActive }) => cn("flex items-center gap-2 p-3 rounded-md hover:bg-teal-50 hover:text-teal-500 text-sm font-medium", isActive && "bg-teal-50 text-teal-500", isCollapsed && "justify-center")}>
                               <item.icon size={20} />
                               {!isCollapsed && (
                                  <span>{item.label}</span>
                               )}
-                           </Link>
+                           </NavLink>
                         </li>
                      )
                   })}

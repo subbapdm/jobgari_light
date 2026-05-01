@@ -1,11 +1,10 @@
-import { useState, type KeyboardEvent } from "react";
+import { useMemo, useState, type KeyboardEvent } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Sparkle, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -13,11 +12,9 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { jobsService } from "@/services/jobService";
 import { toast } from "sonner";
 
@@ -30,6 +27,10 @@ import FormRadioGroup from "@/components/form/FormRadioGroup";
 import FormRadioTab from "@/components/form/FormRadioTab";
 import FormSection from "@/components/form/FormSection";
 import TextEditor from "@/components/form/TextEditor";
+import FormSelect from "@/components/form/FormSelect";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import FormDate from "@/components/form/FormDate";
 
 
 
@@ -37,6 +38,7 @@ const jobSchema = z.object({
    title: z.string().min(5, "Title must be at least 5 characters.").max(100, "Title must be at most 100 characters"),
    description: z.string().min(20, "Description must be at least 20 characters."),
    category: z.string().min(1, "Category is required."),
+   deadline: z.date(),
    company: z.string().min(1, "Company is required."),
    location: z.string().optional(),
    jobType: z.enum(["full-time", "part-time", "contract", "internship"], { message: "Please select a job type."}),
@@ -56,6 +58,14 @@ const Create = () => {
    const [skillInput, setSkillInput] = useState("");
    const [isSubmitting, setIsSubmitting] = useState(false);
 
+   const [openDate, setOpenDate] = useState(false)
+
+   const { data: companiesData, isLoading: loadingCompanies } = useQuery({
+      queryKey: ["companies"],
+      queryFn: () => companyService.getCompanies(),
+      staleTime: 5 * 60 * 1000
+   })
+
    const { data: categoriesData, isLoading:  loadingCategories } = useQuery({
       queryKey: ['categories'],
       queryFn: () => categoryService.getCategories(),
@@ -68,15 +78,47 @@ const Create = () => {
       staleTime: 5 * 60 * 1000
    });
 
-   const { data: companiesData, isLoading: loadingCompanies } = useQuery({
-      queryKey: ["companies"],
-      queryFn: () => companyService.getCompanies(),
-      staleTime: 5 * 60 * 1000
-   })
+   
+   // Test locationOptions without useMemo
+   /* const locationOptions = locationsData?.locations.map((l) => { 
+      console.log("locations recomputed");
+      return {
+         value: l._id,
+         label: l.city
+      }
+   }) ?? [];
+   */
 
-   const categories = categoriesData?.categories || [];
-   const locations = locationsData?.locations || [];
-   const companies = companiesData?.companies || [];
+   // Test locationOptions with useMemo
+   /* const locationOptions = useMemo(() => {
+      console.log("locations recomputed");
+      return locationsData?.locations.map((l) => ({
+         value: l._id,
+         label: l.city
+      }))
+   }, [locationsData]);
+   */
+
+   const locationOptions = useMemo(() => {
+      return locationsData?.locations.map((l) => ({
+         value: l._id,
+         label: l.city
+      })) ?? [];
+   }, [locationsData]);
+
+   const categoryOptions = useMemo(() => {
+      return categoriesData?.categories.map((c) => ({
+         value: c._id,
+         label: c.name
+      })) ?? [];
+   }, [categoriesData]);
+
+   const companyOptions = useMemo(() => {
+      return companiesData?.companies?.map((c) => ({
+         value: c._id,
+         label: c.name
+      })) ?? [];
+   }, [companiesData]);
   
   const {
     register,
@@ -89,9 +131,10 @@ const Create = () => {
     resolver: zodResolver(jobSchema),
       defaultValues: {
          title: "",
-         category: "",
          company: "",
          description: "",
+         category: "",
+         deadline: undefined,
          location: "",
          jobType: "full-time",
          workMode: "onsite",
@@ -162,10 +205,10 @@ const Create = () => {
                            id="title"
                            placeholder="e.g. Frontent Developer"
                            {...register("title")}
-                           className="min-h-11"
+                           className="min-h-11 rounded-md focus-visible:border focus-visible:border-teal-200 focus-visible:ring-1 focus-visible:ring-teal-200"
                         />
                         {errors.title && (
-                           <p className="text-sm text-red-500">{errors.title.message}</p>
+                           <p className="text-xs text-red-500">{errors.title.message}</p>
                         )}
                      </div>
                      <div className="space-y-2">
@@ -176,10 +219,10 @@ const Create = () => {
                            id="title"
                            placeholder="e.g. Frontent Developer"
                            {...register("title")}
-                           className="min-h-11"
+                           className="min-h-11 rounded-md focus-visible:border focus-visible:border-teal-200 focus-visible:ring-1 focus-visible:ring-teal-200"
                         />
                         {errors.title && (
-                           <p className="text-sm text-red-500">{errors.title.message}</p>
+                           <p className="text-xs text-red-500">{errors.title.message}</p>
                         )}
                      </div>
                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -189,52 +232,82 @@ const Create = () => {
                               name="company"
                               control={control}
                               render={({ field }) => (
-                                 <Select onValueChange={field.onChange} value={field.value}>
-                                 <SelectTrigger id="location" className="w-full min-h-11">
-                                    <SelectValue placeholder="Select a company" />
-                                 </SelectTrigger>
-                                 <SelectContent>
-                                    <SelectGroup>
-                                       <SelectLabel>Companies</SelectLabel>
-                                       {companies.map((company) => (
-                                          <SelectItem key={company._id} value={company._id}>{company.name}</SelectItem>
-                                       ))}
-                                    </SelectGroup>
-                                 </SelectContent>
-                                 </Select>
+                                 <FormSelect
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    options={companyOptions}
+                                    placeholder="Select a company"
+                                    label="Companies"
+                                    disabled={loadingCompanies}
+                                    isLoading={loadingCompanies}
+                                    id="company"
+                                    className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                 />
                               )}
                            />
-                           {errors.location && (
-                              <p className="text-sm text-red-500">
-                                 {errors.location.message}
+                           {errors.company && (
+                              <p className="text-xs text-red-500">
+                                 {errors.company.message}
+                              </p>
+                           )}
+                        </div>
+
+                        <div className="space-y-2">
+                           <Label htmlFor="deadline">Dealine</Label>
+                           <Controller
+                              name="deadline"
+                              control={control}
+                              render={({ field }) => (
+                                 <FormDate />
+                              )}
+                           />
+                           {errors.deadline && (
+                              <p className="text-xs text-red-500">
+                                 {errors.deadline.message}
                               </p>
                            )}
                         </div>
                         
                         <div className="space-y-2">
-                           <Label htmlFor="location">Dealine</Label>
+                           <Label htmlFor="deadline">Dealine</Label>
                            <Controller
-                              name="location"
+                              name="deadline"
                               control={control}
                               render={({ field }) => (
-                                 <Select onValueChange={field.onChange} value={field.value}>
-                                 <SelectTrigger id="location" className="w-full min-h-11">
-                                    <SelectValue placeholder="Select a location" />
-                                 </SelectTrigger>
-                                 <SelectContent>
-                                    <SelectGroup>
-                                       <SelectLabel>Locations</SelectLabel>
-                                       {locations.map((loc) => (
-                                          <SelectItem key={loc._id} value={loc._id}>{loc.city}</SelectItem>
-                                       ))}
-                                    </SelectGroup>
-                                 </SelectContent>
-                                 </Select>
+                                 <Popover open={openDate} onOpenChange={setOpenDate}>
+                                    <PopoverTrigger asChild>
+                                       <Button
+                                          variant="outline"
+                                          id="deadline"
+                                          className="w-full min-h-11 rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100 hover:bg-white"
+                                       >
+                                          {field.value ? field.value.toLocaleDateString("en-US", {
+                                             year: "numeric",
+                                             month: "short", 
+                                             day: "numeric"
+                                          }) : <span className="text-muted-foreground">Select a deadline</span>}
+                                       </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 overflow-hidden" align="start">
+                                       <Calendar
+                                          mode="single"
+                                          selected={field.value}
+                                          defaultMonth={field.value}
+                                          captionLayout="dropdown"
+                                          disabled={(date) => date < new Date()}
+                                          onSelect={(date) => {
+                                             field.onChange(date);
+                                             setOpenDate(false);
+                                          }}
+                                          className="w-full"
+                                       />
+                                    </PopoverContent>
+                                 </Popover>
                               )}
                            />
-                           {errors.location && (
-                              <p className="text-sm text-red-500">
-                                 {errors.location.message}
+                           {errors.deadline && (
+                              <p className="text-xs text-red-500">
+                                 {errors.deadline.message}
                               </p>
                            )}
                         </div>
@@ -271,23 +344,21 @@ const Create = () => {
                               name="category"
                               control={control}
                               render={({ field }) => (
-                                 <Select onValueChange={field.onChange} value={field.value}>
-                                 <SelectTrigger id="category" className="w-full min-h-11">
-                                    <SelectValue placeholder="Select a Category" />
-                                 </SelectTrigger>
-                                 <SelectContent>
-                                    <SelectGroup>
-                                       <SelectLabel>Categories</SelectLabel>
-                                       {categories.map((cat) => (
-                                          <SelectItem key={cat._id} value={cat._id}>{cat.name}</SelectItem>
-                                       ))}
-                                    </SelectGroup>
-                                 </SelectContent>
-                                 </Select>
+                                 <FormSelect
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    options={categoryOptions}
+                                    placeholder="Select a categroy"
+                                    label="Categories"
+                                    disabled={loadingCategories}
+                                    id="category"
+                                    isLoading={loadingCategories}
+                                    className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                 />
                               )}
                            />
                            {errors.category && (
-                              <p className="text-sm text-red-500">
+                              <p className="text-xs text-red-500">
                                  {errors.category.message}
                               </p>
                            )}
@@ -298,23 +369,21 @@ const Create = () => {
                               name="location"
                               control={control}
                               render={({ field }) => (
-                                 <Select onValueChange={field.onChange} value={field.value}>
-                                 <SelectTrigger id="location" className="w-full min-h-11">
-                                    <SelectValue placeholder="Select a location" />
-                                 </SelectTrigger>
-                                 <SelectContent>
-                                    <SelectGroup>
-                                       <SelectLabel>Locations</SelectLabel>
-                                       {locations.map((loc) => (
-                                          <SelectItem key={loc._id} value={loc._id}>{loc.city}</SelectItem>
-                                       ))}
-                                    </SelectGroup>
-                                 </SelectContent>
-                                 </Select>
+                                 <FormSelect
+                                    value={field.value ?? ""}
+                                    onChange={field.onChange}
+                                    options={locationOptions}
+                                    placeholder="Select a location"
+                                    label="Location"
+                                    disabled={loadingLocations}
+                                    id="location"
+                                    isLoading={loadingLocations}
+                                    className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                 />
                               )}
                            />
                            {errors.location && (
-                              <p className="text-sm text-red-500">
+                              <p className="text-xs text-red-500">
                                  {errors.location.message}
                               </p>
                            )}
@@ -344,7 +413,7 @@ const Create = () => {
                         />
 
                         {errors.jobType && (
-                           <p className="text-sm text-red-500">
+                           <p className="text-xs text-red-500">
                               {errors.jobType.message}
                            </p>
                         )}
@@ -362,7 +431,7 @@ const Create = () => {
                            ]}
                         />
                         {errors.location && (
-                           <p className="text-sm text-red-500">
+                           <p className="text-xs text-red-500">
                               {errors.location.message}
                            </p>
                         )}
@@ -373,25 +442,26 @@ const Create = () => {
                            name="experience"
                            control={control}
                            render={({ field }) => (
-                              <Select onValueChange={field.onChange} value={field.value}>
-                                 <SelectTrigger id="experience" className="w-full min-h-11">
-                                       <SelectValue placeholder="Select Experience" />
-                                 </SelectTrigger>
-                                 <SelectContent>
-                                    <SelectGroup>
-                                       <SelectItem value="entry">Entry</SelectItem>
-                                       <SelectItem value="junior">Junior</SelectItem>
-                                       <SelectItem value="mid">Mid</SelectItem>
-                                       <SelectItem value="senior">Senior</SelectItem>
-                                       <SelectItem value="lead">Lead</SelectItem>
-                                       <SelectItem value="executive">Executive</SelectItem>
-                                    </SelectGroup>
-                                 </SelectContent>
-                              </Select>
+                              <FormSelect
+                                 value={field.value}
+                                 onChange={field.onChange}
+                                 options={[
+                                    { value: "entry", label: "Entry"},
+                                    { value: "junior", label: "Junior"},
+                                    { value: "mid", label: "Mid"},
+                                    { value: "senior", label: "Senior"},
+                                    { value: "lead", label: "Lead"},
+                                    { value: "executive", label: "Executive"}
+                                 ]}
+                                 placeholder="Select experience"
+                                 label="Experience"
+                                 id="experience"
+                                 className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                              />
                            )}
                         />
                         {errors.experience && (
-                           <p className="text-sm text-red-500">
+                           <p className="text-xs text-red-500">
                               {errors.experience.message}
                            </p>
                         )}
@@ -402,24 +472,25 @@ const Create = () => {
                            name="education"
                            control={control}
                            render={({ field }) => (
-                              <Select onValueChange={field.onChange} value={field.value}>
-                              <SelectTrigger id="education" className="w-full min-h-11">
-                                 <SelectValue placeholder="Select a mode" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                 <SelectGroup>
-                                    <SelectItem value="high-school">High-school</SelectItem>
-                                    <SelectItem value="bachelor">Bachelor</SelectItem>
-                                    <SelectItem value="master">Master</SelectItem>
-                                    <SelectItem value="phd">Phd</SelectItem>
-                                    <SelectItem value="none">None</SelectItem>
-                                 </SelectGroup>
-                              </SelectContent>
-                              </Select>
+                              <FormSelect
+                                 value={field.value}
+                                 onChange={field.onChange}
+                                 options={[
+                                    { value: "high-school", label: "High-school"},
+                                    { value: "bachelor", label: "Bachelor"},
+                                    { value: "master", label: "Master"},
+                                    { value: "phd", label: "Phd"},
+                                    { value: "none", label: "None"}
+                                 ]}
+                                 placeholder="Select education"
+                                 label="Education"
+                                 id="education"
+                                 className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                              />
                            )}
                         />
                         {errors.education && (
-                           <p className="text-sm text-red-500">
+                           <p className="text-xs text-red-500">
                               {errors.education.message}
                            </p>
                         )}
@@ -447,7 +518,7 @@ const Create = () => {
                            </div>
                         )}
                         {errors.experience && (
-                           <p className="text-sm text-red-500">
+                           <p className="text-xs text-red-500">
                               {errors.experience.message}
                            </p>
                         )}
@@ -461,7 +532,7 @@ const Create = () => {
                               <Label htmlFor="airplane-mode">Featured Post</Label>
                               <span className="text-xs text-gray-400">Pin top of career page</span>
                            </div>
-                           <Switch id="airplane-mode" />
+                           <Switch id="airplane-mode" className="data-checked:bg-teal-600" defaultChecked />
                         </div>
 
                         <div className="flex items-center justify-between py-2">
@@ -469,7 +540,7 @@ const Create = () => {
                               <Label htmlFor="airplane-mode">Urgent Hiring</Label>
                               <span className="text-xs text-gray-400">Adds 'Urgent' badge to listing</span>
                            </div>
-                           <Switch id="airplane-mode" />
+                           <Switch id="airplane-mode" className="data-checked:bg-teal-600" />
                         </div>
                      </div>
                      <div className="flex items-center justify-between">
