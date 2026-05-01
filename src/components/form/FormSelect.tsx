@@ -26,7 +26,7 @@ const FormSelect = ({ value, onChange, options, placeholder = "Select an option"
             position="popper"
             className="w-[var(--radix-select-trigger-width)]"
          >
-            <SelectGroup className="p-3 space-y-1">
+            <SelectGroup className="p-2 space-y-1">
                {label && <SelectLabel className="py-3 py-2.5 text-sm">{label}</SelectLabel>}
                {options.map((option) => (
                   <SelectItem 

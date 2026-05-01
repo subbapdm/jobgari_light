@@ -3,20 +3,13 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Sparkle, X } from "lucide-react";
+import { getYear } from "date-fns";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { jobsService } from "@/services/jobService";
-import { toast } from "sonner";
 
 import { useQuery } from "@tanstack/react-query";
 import { categoryService } from "@/services/categoryService";
@@ -28,9 +21,7 @@ import FormRadioTab from "@/components/form/FormRadioTab";
 import FormSection from "@/components/form/FormSection";
 import TextEditor from "@/components/form/TextEditor";
 import FormSelect from "@/components/form/FormSelect";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import FormDate from "@/components/form/FormDate";
+import { FormDate } from "@/components/form/FormDate";
 
 
 
@@ -258,51 +249,13 @@ const Create = () => {
                               name="deadline"
                               control={control}
                               render={({ field }) => (
-                                 <FormDate />
-                              )}
-                           />
-                           {errors.deadline && (
-                              <p className="text-xs text-red-500">
-                                 {errors.deadline.message}
-                              </p>
-                           )}
-                        </div>
-                        
-                        <div className="space-y-2">
-                           <Label htmlFor="deadline">Dealine</Label>
-                           <Controller
-                              name="deadline"
-                              control={control}
-                              render={({ field }) => (
-                                 <Popover open={openDate} onOpenChange={setOpenDate}>
-                                    <PopoverTrigger asChild>
-                                       <Button
-                                          variant="outline"
-                                          id="deadline"
-                                          className="w-full min-h-11 rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100 hover:bg-white"
-                                       >
-                                          {field.value ? field.value.toLocaleDateString("en-US", {
-                                             year: "numeric",
-                                             month: "short", 
-                                             day: "numeric"
-                                          }) : <span className="text-muted-foreground">Select a deadline</span>}
-                                       </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 overflow-hidden" align="start">
-                                       <Calendar
-                                          mode="single"
-                                          selected={field.value}
-                                          defaultMonth={field.value}
-                                          captionLayout="dropdown"
-                                          disabled={(date) => date < new Date()}
-                                          onSelect={(date) => {
-                                             field.onChange(date);
-                                             setOpenDate(false);
-                                          }}
-                                          className="w-full"
-                                       />
-                                    </PopoverContent>
-                                 </Popover>
+                                 <FormDate
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    startYear={getYear(new Date())}
+                                    endYear={getYear(new Date()) + 5}
+                                    className="min-h-11 text-gray-500 font-normal rounded-md"
+                                 />
                               )}
                            />
                            {errors.deadline && (
