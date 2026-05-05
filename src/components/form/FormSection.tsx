@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 
 interface FormSectionProps{
@@ -6,11 +7,12 @@ interface FormSectionProps{
    icon?: LucideIcon;
    children: React.ReactNode;
    button?: React.ReactNode;
+   className?: string;
 }
 
-const FormSection = ({ children, title, subtitle, icon: Icon, button }: FormSectionProps) => {
+const FormSection = ({ children, title, subtitle, icon: Icon, button, className }: FormSectionProps) => {
    return (
-      <section className="bg-white p-5 border border-gray-200 space-y-6 rounded-md">
+      <section className={cn("bg-white", className ?? "")}>
          {title && subtitle && (
             <div className="flex items-center justify-between gap-3 mb-6">
                <div className="flex items-center justify-between gap-2">

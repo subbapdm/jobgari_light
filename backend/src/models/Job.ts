@@ -11,6 +11,9 @@ const jobSchema = new mongoose.Schema({
       ref: "Company",
       required: true
    },
+   deadline: {
+      type: Date,
+   },
    title: {
       type: String,
       required: true,

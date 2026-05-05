@@ -32,7 +32,7 @@ const FormSelect = ({ value, onChange, options, placeholder = "Select an option"
                   <SelectItem 
                      key={option.value} 
                      value={option.value} 
-                     className="p-2 text-gray-700 font-medium cursor-pointer transition-color duration-200 data-[highlighted]:bg-teal-100 data-[highlighted]:[&_span]:!text-teal-700 data-[state=checked]:bg-teal-100 data-[state=checked]:text-teal-700">
+                     className="p-2 text-gray-700 font-medium cursor-pointer transition-color duration-200 data-[highlighted]:bg-teal-100 data-[highlighted]:[&_span]:text-teal-700 data-[state=checked]:bg-teal-100 data-[state=checked]:text-teal-700">
                         {option.label}
                   </SelectItem>
                ))}

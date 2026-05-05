@@ -16,20 +16,22 @@ export const getJobs = async (req: Request, res: Response) => {
 
 export const createJob = async (req: AuthRequest, res: Response) => {
    try {
-      const { title, description, category, location, jobType, workMode, salary, experience, education, skills, status, isFeatured, isUrgent } = req.body;
+      const { title, slug, company, deadline, description, category, location, jobType, workMode, experience, salary, education, skills, status, isFeatured, isUrgent } = req.body;
 
 
       const job = Job.create({
          user: req.user?._id,
-         company: "69e7eb3056e8baf537139b0c",
          title,
+         slug,
+         company: "69e7eb3056e8baf537139b0c",
+         deadline,
          description,
          category,
          location,
          jobType,
          workMode,
-         salary,
          experience,
+         salary,
          education,
          skills,
          status: status || "active",
