@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Sparkle, Sparkles } from "lucide-react";
+import { Building2, Check, MapPin, Sparkle, Sparkles, Wifi } from "lucide-react";
 import { getYear } from "date-fns";
 import { toast } from "sonner";
 
@@ -25,6 +25,7 @@ import { FormDate } from "@/components/form/FormDate";
 import { slugify } from "@/utils/helper";
 import BadgeInput from "@/components/form/BadgeInput";
 import SalaryInput from "@/components/form/SalaryInput";
+import { cn } from "@/lib/utils";
 
 const jobSchema = z.object({
    title: z
@@ -437,26 +438,17 @@ const Create = () => {
 
                   </FormSection>
 
-                  <FormSection
-                     title="Job description"
-                     subtitle="Describe the role and what you're looking for"
-                     icon={Sparkle}
-                     button={
-                        <Button
-                           type="button"
-                           variant="link"
-                           className="text-[0.75rem] text-teal-700 font-semibold gap-1 p-0"
-                        >
-                           <Sparkles className="size-4" />
-                           <span>AI Generate</span>
-                        </Button>
-                     }
-                     className="p-5 border border-gray-200 space-y-5 rounded-md"
-                  >
-                     <div className="space-y-2">
-                        <Label htmlFor="description" className="peer sr-only">
-                           Description
-                        </Label>
+                  <FormSection className="p-5 border border-gray-200 space-y-5 rounded-md">
+                     <div>
+                        <div className="flex items-center justify-between">
+                           <Label htmlFor="description" className="text-[0.85rem] font-semibold text-gray-700 leading-tight">
+                              Job Description <span className="text-red-500">*</span>
+                           </Label>
+                           <Button type="button" variant="link" className="flex items-center text-[0.75rem] text-teal-700 font-semibold gap-1 cursor-pointer hover:no-underline">
+                              <Sparkles className="size-4" />
+                              <span>AI Generate</span>
+                           </Button>
+                        </div>
                         <Controller
                            name="description"
                            control={control}
@@ -465,7 +457,7 @@ const Create = () => {
                                  value={field.value}
                                  onChange={field.onChange}
                                  placeholder="Describe the role, responsibilities, requirements..."
-                                 className="rounded-sm"
+                                 className="rounded-sm min-h-90"
                               />
                            )}
                         />
@@ -515,9 +507,9 @@ const Create = () => {
                            control={control}
                            name="workMode"
                            options={[
-                              { value: "remote", label: "Remote" },
-                              { value: "hybrid", label: "Hybrid" },
-                              { value: "onsite", label: "Onsite" },
+                              { value: "remote", label: "Remote", icon: Wifi },
+                              { value: "hybrid", label: "Hybrid", icon: Building2 },
+                              { value: "onsite", label: "Onsite", icon: MapPin },
                            ]}
                         />
                         {errors.workMode && (
@@ -582,16 +574,16 @@ const Create = () => {
                               </span>
                            </div>
                            <Controller
-                                 name="isFeatured"
-                                 control={control}
-                                 render={({ field }) => (
-                                    <Switch
-                                       id="isFeatured"
-                                       checked={field.value}
-                                       onCheckedChange={field.onChange}
-                                       className="data-checked:bg-teal-600 cursor-pointer"
-                                    />
-                                 )}
+                              name="isFeatured"
+                              control={control}
+                              render={({ field }) => (
+                                 <Switch
+                                    id="isFeatured"
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                    className="data-checked:bg-teal-600 cursor-pointer"
+                                 />
+                              )}
                            />
                         </div>
 
@@ -603,33 +595,33 @@ const Create = () => {
                            </span>
                         </div>
                         <Controller
-                              name="isUrgent"
-                              control={control}
-                              render={({ field }) => (
-                                 <Switch
-                                    id="isUrgent"
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                    className="data-checked:bg-teal-600 cursor-pointer"
-                                 />
-                              )}
+                           name="isUrgent"
+                           control={control}
+                           render={({ field }) => (
+                              <Switch
+                                 id="isUrgent"
+                                 checked={field.value}
+                                 onCheckedChange={field.onChange}
+                                 className="data-checked:bg-teal-600 cursor-pointer"
+                              />
+                           )}
                         />
                         </div>
                      </div>
-                     <div className="flex items-center justify-between">
+                     <div className="flex items-center justify-between gap-4">
                         <Button
-                        type="button"
-                        variant="outline"
-                        className="min-h-11 px-6"
+                           type="button"
+                           variant="outline"
+                           className="flex-1 min-h-11 px-6"
                         >
-                        Save Draft
+                           Save Draft
                         </Button>
                         <Button
                            type="submit"
                            disabled={isSubmitting}
-                           className="min-h-11 min-w-1/2 bg-teal-600 hover:bg-teal-700"
+                           className="flex-2 min-h-11 bg-teal-600 hover:bg-teal-700"
                         >
-                        Publish Job
+                           Publish Job
                         </Button>
                      </div>
                   </FormSection>

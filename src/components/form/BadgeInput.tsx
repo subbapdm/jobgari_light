@@ -44,10 +44,10 @@ const BadgeInput = ({ value = [], onChange, placeholder, className, suggestings 
       <div className="space-y-3">
          <div onClick={() => inputRef.current?.focus()} className={cn("flex flex-wrap gap-2 transition p-2 border border-gray-200", className)}>
             {value.map((item) => (
-               <span key={item} role="listitem" className="inline-flex items-center gap-1.5 pl-2.5 pr-1.5 py-1 rounded-sm bg-teal-100 text-teal-700 text-xs font-semibold">
+               <span key={item} role="listitem" className="inline-flex items-center gap-1 pl-2.5 pr-1.5 py-1 rounded-full bg-teal-100 text-teal-700 text-[0.7rem] font-medium">
                   {item}
                   <button type="button" aria-label={`Remove ${item}`} onClick={(e) => { e.stopPropagation(); remove(item)}} className="size-4 grid place-items-center rounded hover:bg-teal-300 cursor-pointer">
-                     <X className="size-3" />
+                     <X className="size-3.5" />
                   </button>
                </span>
             ))}

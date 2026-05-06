@@ -23,7 +23,9 @@ const FormSection = ({ children, title, subtitle, icon: Icon, button, className 
                   ) : null}
                   <div>
                      <h4 className="text-md font-semibold text-foreground">{title}</h4>
-                     <p className="text-xs text-gray-400">{subtitle}</p>
+                     {subtitle && (
+                        <p className="text-xs text-gray-400">{subtitle}</p>
+                     )}
                   </div>
                </div>
                {button}

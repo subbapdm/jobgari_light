@@ -29,7 +29,6 @@ export const createJob = async (req: AuthRequest, res: Response) => {
          return;
       }
 
-
       const job = Job.create({
          user: req.user._id,
          title,
