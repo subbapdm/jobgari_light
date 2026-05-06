@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
@@ -36,9 +37,10 @@ const SYMBOL: Record<SalaryValue["currency"], string> = {
 interface SalaryInputProps {
    value?: SalaryValue;
    onChange: (value: SalaryValue) => void;
+   className?: string;
 }
 
-const SalaryInput = ({ value = DEFAULT_SALARY, onChange }: SalaryInputProps) => {
+const SalaryInput = ({ value = DEFAULT_SALARY, onChange, className }: SalaryInputProps) => {
    const patch = (partial: Partial<SalaryValue>) => onChange({ ...value, ...partial });
 
    return (
@@ -62,7 +64,7 @@ const SalaryInput = ({ value = DEFAULT_SALARY, onChange }: SalaryInputProps) => 
                options={CURRENCY_OPTIONS}
                label="Currency"
                placeholder="Currency"
-               className="rounded-md text-sm"
+               className={cn("text-sm", className)}
             />
             <FormSelect
                value={value.period}
@@ -70,7 +72,7 @@ const SalaryInput = ({ value = DEFAULT_SALARY, onChange }: SalaryInputProps) => 
                options={PERIOD_OPTIONS}
                label="Period"
                placeholder="Period"
-               className="rounded-md text-sm"
+               className={cn("text-sm", className)}
             />
          </div>
 
@@ -87,7 +89,7 @@ const SalaryInput = ({ value = DEFAULT_SALARY, onChange }: SalaryInputProps) => 
                         min={0}
                         value={value[key] ?? ""}
                         onChange={(e) => patch({ [key]: e.target.value === "" ? undefined : Number(e.target.value ) })}
-                        className="pl-7 min-h-11 rounded-md text-sm focus-visible:border-teal-200 focus-visible:ring-1 focus-visible:ring-teal-200"
+                        className={cn("pl-7 text-sm focus-visible:border-teal-200 focus-visible:ring-1 focus-visible:ring-teal-200", className)}
                      />
                   </div>
                </div>

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Sparkle } from "lucide-react";
+import { Sparkle, Sparkles } from "lucide-react";
 import { getYear } from "date-fns";
 import { toast } from "sonner";
 
@@ -149,7 +149,7 @@ const Create = () => {
          education: "none",
          salary: {
             currency: "USD",
-            period: "annually",
+            period: "monthly",
             undisclosed: false
          },
          skills: [],
@@ -206,30 +206,30 @@ const Create = () => {
                   <FormSection className="p-5 border border-gray-200 space-y-6 rounded-md">
 
                      <div className="space-y-2">
-                           <Label
-                              htmlFor="title"
-                              className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
-                           >
-                              Job Title
-                           </Label>
-                           <Input
-                              id="title"
-                              {...register("title")}
-                              placeholder="e.g. Frontent Developer"
-                              className="min-h-11 rounded-md focus-visible:border focus-visible:border-teal-200 focus-visible:ring-1 focus-visible:ring-teal-200"
-                           />
-                           {errors.title && (
-                              <p className="text-xs text-red-500">
-                                    {errors.title.message}
-                              </p>
-                           )}
+                        <Label
+                           htmlFor="title"
+                           className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
+                        >
+                           Job Title
+                        </Label>
+                        <Input
+                           id="title"
+                           {...register("title")}
+                           placeholder="e.g. Frontent Developer"
+                           className="min-h-11 rounded-sm focus-visible:border focus-visible:border-teal-200 focus-visible:ring-1 focus-visible:ring-teal-200"
+                        />
+                        {errors.title && (
+                           <p className="text-xs text-red-500">
+                                 {errors.title.message}
+                           </p>
+                        )}
                      </div>
                      <div className="space-y-2">
                         <Label
-                        htmlFor="slug"
-                        className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
+                           htmlFor="slug"
+                           className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
                         >
-                        Slug
+                           Slug
                         </Label>
                         <Input
                            id="slug"
@@ -239,15 +239,15 @@ const Create = () => {
                               slugRegistration.onChange(e)
                            }}
                            placeholder="e.g. Frontent Developer"
-                           className="min-h-11 rounded-md focus-visible:border focus-visible:border-teal-200 focus-visible:ring-1 focus-visible:ring-teal-200"
+                           className="min-h-11 rounded-sm focus-visible:border focus-visible:border-teal-200 focus-visible:ring-1 focus-visible:ring-teal-200"
                         />
                         {errors.slug && (
-                        <p className="text-xs text-red-500">
-                           {errors.slug.message}
-                        </p>
+                           <p className="text-xs text-red-500">
+                              {errors.slug.message}
+                           </p>
                         )}
                      </div>
-                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                         <div className="space-y-2">
                            <Label
                               htmlFor="company"
@@ -260,15 +260,15 @@ const Create = () => {
                               control={control}
                               render={({ field }) => (
                                  <FormSelect
-                                 value={field.value}
-                                 onChange={field.onChange}
-                                 options={companyOptions}
-                                 placeholder="Select a company"
-                                 label="Companies"
-                                 disabled={loadingCompanies}
-                                 isLoading={loadingCompanies}
-                                 id="company"
-                                 className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    options={companyOptions}
+                                    placeholder="Select a company"
+                                    label="Companies"
+                                    disabled={loadingCompanies}
+                                    isLoading={loadingCompanies}
+                                    id="company"
+                                    className="min-h-11 rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
                                  />
                               )}
                            />
@@ -290,11 +290,11 @@ const Create = () => {
                               control={control}
                               render={({ field }) => (
                                  <FormDate
-                                 value={field.value}
-                                 onChange={field.onChange}
-                                 startYear={getYear(new Date())}
-                                 endYear={getYear(new Date()) + 5}
-                                 className="min-h-11 text-gray-500 font-normal rounded-md"
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    startYear={getYear(new Date())}
+                                    endYear={getYear(new Date()) + 5}
+                                    className="min-h-11 text-gray-500 font-normal rounded-sm"
                                  />
                               )}
                            />
@@ -316,15 +316,15 @@ const Create = () => {
                               control={control}
                               render={({ field }) => (
                                  <FormSelect
-                                 value={field.value}
-                                 onChange={field.onChange}
-                                 options={categoryOptions}
-                                 placeholder="Select a categroy"
-                                 label="Categories"
-                                 disabled={loadingCategories}
-                                 id="category"
-                                 isLoading={loadingCategories}
-                                 className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    options={categoryOptions}
+                                    placeholder="Select a categroy"
+                                    label="Categories"
+                                    disabled={loadingCategories}
+                                    id="category"
+                                    isLoading={loadingCategories}
+                                    className="min-h-11 rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
                                  />
                               )}
                            />
@@ -346,15 +346,15 @@ const Create = () => {
                               control={control}
                               render={({ field }) => (
                                  <FormSelect
-                                 value={field.value ?? ""}
-                                 onChange={field.onChange}
-                                 options={locationOptions}
-                                 placeholder="Select a location"
-                                 label="Location"
-                                 disabled={loadingLocations}
-                                 id="location"
-                                 isLoading={loadingLocations}
-                                 className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                    value={field.value ?? ""}
+                                    onChange={field.onChange}
+                                    options={locationOptions}
+                                    placeholder="Select a location"
+                                    label="Location"
+                                    disabled={loadingLocations}
+                                    id="location"
+                                    isLoading={loadingLocations}
+                                    className="min-h-11 rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
                                  />
                               )}
                            />
@@ -389,7 +389,7 @@ const Create = () => {
                                     placeholder="Select experience"
                                     label="Experience"
                                     id="experience"
-                                    className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                    className="min-h-11 rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
                                  />
                               )}
                            />
@@ -423,7 +423,7 @@ const Create = () => {
                                     placeholder="Select education"
                                     label="Education"
                                     id="education"
-                                    className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                    className="min-h-11 rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
                                  />
                               )}
                            />
@@ -437,199 +437,202 @@ const Create = () => {
 
                   </FormSection>
 
-               <FormSection
-                  title="Job description"
-                  subtitle="Describe the role and what you're looking for"
-                  icon={Sparkle}
-                  button={
-                     <Button
-                     type="button"
-                     className="text-[0.7rem] text-teal-700 min-h-9 bg-teal-100 hover:bg-teal-100/90 gap-1"
-                     >
-                     <Sparkle className="size-3" />
-                     <span>Generate with AI</span>
-                     </Button>
-                  }
-                  className="p-5 border border-gray-200 space-y-6 rounded-md"
-               >
-                  <div className="space-y-2">
-                     <Label htmlFor="description" className="peer sr-only">
-                     Description
-                     </Label>
-                     <Controller
-                     name="description"
-                     control={control}
-                     render={({ field }) => (
-                        <TextEditor
-                           value={field.value}
-                           onChange={field.onChange}
-                           placeholder="Describe the role, responsibilities, requirements..."
+                  <FormSection
+                     title="Job description"
+                     subtitle="Describe the role and what you're looking for"
+                     icon={Sparkle}
+                     button={
+                        <Button
+                           type="button"
+                           variant="link"
+                           className="text-[0.75rem] text-teal-700 font-semibold gap-1 p-0"
+                        >
+                           <Sparkles className="size-4" />
+                           <span>AI Generate</span>
+                        </Button>
+                     }
+                     className="p-5 border border-gray-200 space-y-5 rounded-md"
+                  >
+                     <div className="space-y-2">
+                        <Label htmlFor="description" className="peer sr-only">
+                           Description
+                        </Label>
+                        <Controller
+                           name="description"
+                           control={control}
+                           render={({ field }) => (
+                              <TextEditor
+                                 value={field.value}
+                                 onChange={field.onChange}
+                                 placeholder="Describe the role, responsibilities, requirements..."
+                                 className="rounded-sm"
+                              />
+                           )}
                         />
-                     )}
-                     />
-                  </div>
-               </FormSection>
+                     </div>
+                  </FormSection>
 
                </div>
 
                {/* RIGHT */}
                <aside className="xl:sticky xl:top-28 xl:self-start space-y-6">
-               <FormSection className="p-5 border border-gray-200 space-y-6 rounded-md">
-                  <div className="space-y-2">
-                     <Label
-                     htmlFor="jobType"
-                     className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
-                     >
-                     Job Type
-                     </Label>
+                  <FormSection className="p-5 border border-gray-200 space-y-6 rounded-md">
+                     <div className="space-y-2">
+                        <Label
+                           htmlFor="jobType"
+                           className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
+                        >
+                           Job Type
+                        </Label>
 
-                     <FormRadioGroup
-                     control={control}
-                     name="jobType"
-                     size="sm"
-                     options={[
-                        { value: "full-time", label: "Full-Time" },
-                        { value: "part-time", label: "Part-Time" },
-                        { value: "contract", label: "Contract" },
-                        { value: "internship", label: "Internship" },
-                     ]}
-                     />
+                        <FormRadioGroup
+                           control={control}
+                           name="jobType"
+                           size="sm"
+                           options={[
+                              { value: "full-time", label: "Full-Time" },
+                              { value: "part-time", label: "Part-Time" },
+                              { value: "contract", label: "Contract" },
+                              { value: "internship", label: "Internship" },
+                           ]}
+                        />
 
-                     {errors.jobType && (
-                     <p className="text-xs text-red-500">
-                        {errors.jobType.message}
-                     </p>
-                     )}
-                  </div>
-                  <div className="space-y-2">
-                     <Label
-                     htmlFor="workMode"
-                     className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
-                     >
-                     Work Mode
-                     </Label>
-
-                     <FormRadioTab
-                     control={control}
-                     name="workMode"
-                     options={[
-                        { value: "remote", label: "Remote" },
-                        { value: "hybrid", label: "Hybrid" },
-                        { value: "onsite", label: "Onsite" },
-                     ]}
-                     />
-                     {errors.workMode && (
-                     <p className="text-xs text-red-500">
-                        {errors.workMode.message}
-                     </p>
-                     )}
-                  </div>
-                  <div className="space-y-2">
-                     <Controller
-                        name="salary"
-                        control={control}
-                        render={({ field }) => (
-                           <SalaryInput
-                              value={field.value}
-                              onChange={field.onChange}
-                           />
-                        )} 
-                     />
-                     {errors.salary?.max && (
-                        <p className="text-xs text-red-500">
-                           {errors.salary.max.message}
-                        </p>
-                     )}
-                  </div>
-                  <div className="space-y-2">
-                     <Label
-                     htmlFor="skills"
-                     className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
-                     >
-                     Skills
-                     </Label>
-                     <Controller
-                        name="skills"
-                        control={control}
-                        render={({ field }) => (
-                           <BadgeInput
-                              value={field.value ?? []}
-                              onChange={field.onChange}
-                              placeholder="Add skill..."
-                              suggestings={["Prototyping", "Photoshop", "Maya"]}
-                              className="min-h-11 rounded-md bg-gray-50 focus-within:border-teal-100 focus-within:ring-1 focus-within:ring-teal-100"
-                           />
+                        {errors.jobType && (
+                           <p className="text-xs text-red-500">
+                              {errors.jobType.message}
+                           </p>
                         )}
-                     />
-                     {errors.skills && (
-                     <p className="text-xs text-red-500">
-                        {errors.skills.message}
-                     </p>
-                     )}
-                  </div>
-               </FormSection>
+                     </div>
+                     <div className="space-y-2">
+                        <Label
+                           htmlFor="workMode"
+                           className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
+                        >
+                           Work Mode
+                        </Label>
 
-               <FormSection className="p-5 border border-gray-200 space-y-6 rounded-md">
-                  <div className="">
-                     <div className="flex items-center justify-between py-2">
+                        <FormRadioTab
+                           control={control}
+                           name="workMode"
+                           options={[
+                              { value: "remote", label: "Remote" },
+                              { value: "hybrid", label: "Hybrid" },
+                              { value: "onsite", label: "Onsite" },
+                           ]}
+                        />
+                        {errors.workMode && (
+                           <p className="text-xs text-red-500">
+                              {errors.workMode.message}
+                           </p>
+                        )}
+                     </div>
+                     <div className="space-y-2">
+                        <Controller
+                           name="salary"
+                           control={control}
+                           render={({ field }) => (
+                              <SalaryInput
+                                 value={field.value}
+                                 onChange={field.onChange}
+                                 className="min-h-11 rounded-sm"
+                              />
+                           )} 
+                        />
+                        {errors.salary?.max && (
+                           <p className="text-xs text-red-500">
+                              {errors.salary.max.message}
+                           </p>
+                        )}
+                     </div>
+                     <div className="space-y-2">
+                        <Label
+                           htmlFor="skills"
+                           className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
+                        >
+                        Skills
+                        </Label>
+                        <Controller
+                           name="skills"
+                           control={control}
+                           render={({ field }) => (
+                              <BadgeInput
+                                 value={field.value ?? []}
+                                 onChange={field.onChange}
+                                 placeholder="Add skill..."
+                                 suggestings={["Prototyping", "Photoshop", "Maya"]}
+                                 className="min-h-11 rounded-md bg-gray-50 focus-within:border-teal-100 focus-within:ring-1 focus-within:ring-teal-100"
+                              />
+                           )}
+                        />
+                        {errors.skills && (
+                        <p className="text-xs text-red-500">
+                           {errors.skills.message}
+                        </p>
+                        )}
+                     </div>
+                  </FormSection>
+
+                  <FormSection className="p-5 border border-gray-200 space-y-6 rounded-md">
+                     <div className="">
+                        <div className="flex items-center justify-between py-2">
+                           <div>
+                              <Label htmlFor="isFeatured" className="text-[0.85rem] font-semibold text-gray-700 leading-tight">Featured Post</Label>
+                              <span className="text-xs text-gray-400">
+                                 Pin top of career page
+                              </span>
+                           </div>
+                           <Controller
+                                 name="isFeatured"
+                                 control={control}
+                                 render={({ field }) => (
+                                    <Switch
+                                       id="isFeatured"
+                                       checked={field.value}
+                                       onCheckedChange={field.onChange}
+                                       className="data-checked:bg-teal-600 cursor-pointer"
+                                    />
+                                 )}
+                           />
+                        </div>
+
+                        <div className="flex items-center justify-between py-2">
                         <div>
-                           <Label htmlFor="isFeatured">Featured Post</Label>
+                           <Label htmlFor="isUrgent" className="text-[0.85rem] font-semibold text-gray-700 leading-tight">Urgent Hiring</Label>
                            <span className="text-xs text-gray-400">
-                              Pin top of career page
+                              Adds 'Urgent' badge to listing
                            </span>
                         </div>
                         <Controller
-                              name="isFeatured"
+                              name="isUrgent"
                               control={control}
                               render={({ field }) => (
                                  <Switch
-                                    id="isFeatured"
+                                    id="isUrgent"
                                     checked={field.value}
                                     onCheckedChange={field.onChange}
                                     className="data-checked:bg-teal-600 cursor-pointer"
                                  />
                               )}
                         />
+                        </div>
                      </div>
-
-                     <div className="flex items-center justify-between py-2">
-                     <div>
-                        <Label htmlFor="isUrgent">Urgent Hiring</Label>
-                        <span className="text-xs text-gray-400">
-                           Adds 'Urgent' badge to listing
-                        </span>
+                     <div className="flex items-center justify-between">
+                        <Button
+                        type="button"
+                        variant="outline"
+                        className="min-h-11 px-6"
+                        >
+                        Save Draft
+                        </Button>
+                        <Button
+                           type="submit"
+                           disabled={isSubmitting}
+                           className="min-h-11 min-w-1/2 bg-teal-600 hover:bg-teal-700"
+                        >
+                        Publish Job
+                        </Button>
                      </div>
-                     <Controller
-                           name="isUrgent"
-                           control={control}
-                           render={({ field }) => (
-                              <Switch
-                                 id="isUrgent"
-                                 checked={field.value}
-                                 onCheckedChange={field.onChange}
-                                 className="data-checked:bg-teal-600 cursor-pointer"
-                              />
-                           )}
-                     />
-                     </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                     <Button
-                     type="button"
-                     variant="outline"
-                     className="min-h-11 px-6"
-                     >
-                     Save Draft
-                     </Button>
-                     <Button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="min-h-11 min-w-1/2 bg-teal-600 hover:bg-teal-700"
-                     >
-                     Publish Job
-                     </Button>
-                  </div>
-               </FormSection>
+                  </FormSection>
                </aside>
             </div>
          </form>

@@ -65,7 +65,7 @@ export function FormDate({
                <Button
                   variant="outline"
                   data-empty={!date}
-                  className={cn("w-full justify-start text-left data-[empty=true]:text-muted-foreground", className ?? "")}
+                  className={cn("w-full justify-start text-left data-[empty=true]:text-muted-foreground", className)}
                >
                   <CalendarIcon />
                   {date ? format(date, "PPP") : <span>Pick a date</span>}

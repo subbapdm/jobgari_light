@@ -26,9 +26,10 @@ interface TextEdirorProps{
    value: string;
    onChange: ( value: string) => void;
    placeholder?: string;
+   className?: string;
 }
 
-const TextEditor = ({ value, onChange, placeholder }: TextEdirorProps) => {
+const TextEditor = ({ value, onChange, placeholder, className }: TextEdirorProps) => {
    const editor = useEditor({
       extensions: [StarterKit],
       content: value,
@@ -52,7 +53,7 @@ const TextEditor = ({ value, onChange, placeholder }: TextEdirorProps) => {
    if(!editor) return null;
 
    return (
-      <div className="border border-gray-200 rounded-md bg-white overflow-hidden">
+      <div className={cn("border border-gray-200 bg-white overflow-hidden", className)}>
          {/* TOOLBAR */}
          <div className="border-b border-gray-200 bg-gray-50 p-2 flex gap-1">
             <ToolbarButton 

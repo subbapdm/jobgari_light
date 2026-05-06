@@ -12,9 +12,9 @@ interface FormSectionProps{
 
 const FormSection = ({ children, title, subtitle, icon: Icon, button, className }: FormSectionProps) => {
    return (
-      <section className={cn("bg-white", className ?? "")}>
-         {title && subtitle && (
-            <div className="flex items-center justify-between gap-3 mb-6">
+      <section className={cn("bg-white", className)}>
+         {(title || subtitle) && (
+            <div className="flex items-center justify-between gap-3">
                <div className="flex items-center justify-between gap-2">
                   {Icon ? (
                      <div className="size-10 rounded-lg bg-teal-50 flex items-center justify-center shrink-0">
@@ -23,7 +23,7 @@ const FormSection = ({ children, title, subtitle, icon: Icon, button, className 
                   ) : null}
                   <div>
                      <h4 className="text-md font-semibold text-foreground">{title}</h4>
-                     <p className="text-[0.7rem] text-gray-400">{subtitle}</p>
+                     <p className="text-xs text-gray-400">{subtitle}</p>
                   </div>
                </div>
                {button}
