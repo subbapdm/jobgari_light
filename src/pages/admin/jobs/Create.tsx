@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Sparkle, X } from "lucide-react";
+import { Sparkle } from "lucide-react";
 import { getYear } from "date-fns";
 import { toast } from "sonner";
 
@@ -24,6 +24,7 @@ import FormSelect from "@/components/form/FormSelect";
 import { FormDate } from "@/components/form/FormDate";
 import { slugify } from "@/utils/helper";
 import BadgeInput from "@/components/form/BadgeInput";
+import SalaryInput from "@/components/form/SalaryInput";
 
 const jobSchema = z.object({
    title: z
@@ -47,12 +48,16 @@ const jobSchema = z.object({
    workMode: z.enum(["remote", "onsite", "hybrid"], {
       message: "Please select a work mode.",
    }),
-   salary: z
-      .object({
-         min: z.number().nullable().optional(),
-         max: z.number().nullable().optional(),
-      })
-      .optional(),
+   salary: z.object({
+      min: z.number().min(0).optional(),
+      max: z.number().min(0).optional(),
+      currency: z.enum(["USD", "EUR", "GBP"]),
+      period: z.enum(["hourly", "monthly", "annually"]),
+      undisclosed: z.boolean(),
+   }).refine(
+      (s) => s.undisclosed || s.min === undefined || s.max === undefined || s.min <= s.max,
+      { message: "Min salary cannot exceed max salary", path: ["max"] }
+   ),
    experience: z.enum(
       ["entry", "junior", "mid", "senior", "lead", "executive"],
       { message: "Please select experience level." },
@@ -93,26 +98,6 @@ const Create = () => {
       queryFn: () => locationService.getLocations(),
       staleTime: 5 * 60 * 1000,
    });
-
-  // Test locationOptions without useMemo
-  /* const locationOptions = locationsData?.locations.map((l) => { 
-      console.log("locations recomputed");
-      return {
-         value: l._id,
-         label: l.city
-      }
-   }) ?? [];
-   */
-
-  // Test locationOptions with useMemo
-  /* const locationOptions = useMemo(() => {
-      console.log("locations recomputed");
-      return locationsData?.locations.map((l) => ({
-         value: l._id,
-         label: l.city
-      }))
-   }, [locationsData]);
-   */
 
    const locationOptions = useMemo(() => {
       return (
@@ -162,6 +147,11 @@ const Create = () => {
          workMode: "onsite",
          experience: "entry",
          education: "none",
+         salary: {
+            currency: "USD",
+            period: "annually",
+            undisclosed: false
+         },
          skills: [],
          status: "active",
          isFeatured: true,
@@ -178,14 +168,16 @@ const Create = () => {
    }, [title, setValue]);
 
 
-   const skills = watch("skills");
+   const salary = watch("salary");
+   console.log(salary);
+
    const slugRegistration = register("slug");
 
    const onSubmit = async (data: JobFormData) => {
       setIsSubmitting(true);
 
       try {
-         // const result = await jobsService.createJob(data);
+         const result = await jobsService.createJob(data);
          toast.success("Job created!");
       } catch (err) {
       } finally {
@@ -212,6 +204,7 @@ const Create = () => {
                {/* LEFT */}
                <div className="min-w-0 space-y-6">
                   <FormSection className="p-5 border border-gray-200 space-y-6 rounded-md">
+
                      <div className="space-y-2">
                            <Label
                               htmlFor="title"
@@ -256,63 +249,192 @@ const Create = () => {
                      </div>
                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-2">
-                        <Label
-                           htmlFor="company"
-                           className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
-                        >
-                           Company
-                        </Label>
-                        <Controller
-                           name="company"
-                           control={control}
-                           render={({ field }) => (
-                              <FormSelect
-                              value={field.value}
-                              onChange={field.onChange}
-                              options={companyOptions}
-                              placeholder="Select a company"
-                              label="Companies"
-                              disabled={loadingCompanies}
-                              isLoading={loadingCompanies}
-                              id="company"
-                              className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
-                              />
+                           <Label
+                              htmlFor="company"
+                              className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
+                           >
+                              Company
+                           </Label>
+                           <Controller
+                              name="company"
+                              control={control}
+                              render={({ field }) => (
+                                 <FormSelect
+                                 value={field.value}
+                                 onChange={field.onChange}
+                                 options={companyOptions}
+                                 placeholder="Select a company"
+                                 label="Companies"
+                                 disabled={loadingCompanies}
+                                 isLoading={loadingCompanies}
+                                 id="company"
+                                 className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                 />
+                              )}
+                           />
+                           {errors.company && (
+                              <p className="text-xs text-red-500">
+                                 {errors.company.message}
+                              </p>
                            )}
-                        />
-                        {errors.company && (
-                           <p className="text-xs text-red-500">
-                              {errors.company.message}
-                           </p>
-                        )}
                         </div>
-
                         <div className="space-y-2">
-                        <Label
-                           htmlFor="deadline"
-                           className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
-                        >
-                           Dealine
-                        </Label>
-                        <Controller
-                           name="deadline"
-                           control={control}
-                           render={({ field }) => (
-                              <FormDate
-                              value={field.value}
-                              onChange={field.onChange}
-                              startYear={getYear(new Date())}
-                              endYear={getYear(new Date()) + 5}
-                              className="min-h-11 text-gray-500 font-normal rounded-md"
-                              />
+                           <Label
+                              htmlFor="deadline"
+                              className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
+                           >
+                              Dealine
+                           </Label>
+                           <Controller
+                              name="deadline"
+                              control={control}
+                              render={({ field }) => (
+                                 <FormDate
+                                 value={field.value}
+                                 onChange={field.onChange}
+                                 startYear={getYear(new Date())}
+                                 endYear={getYear(new Date()) + 5}
+                                 className="min-h-11 text-gray-500 font-normal rounded-md"
+                                 />
+                              )}
+                           />
+                           {errors.deadline && (
+                              <p className="text-xs text-red-500">
+                                 {errors.deadline.message}
+                              </p>
                            )}
-                        />
-                        {errors.deadline && (
-                           <p className="text-xs text-red-500">
-                              {errors.deadline.message}
-                           </p>
-                        )}
+                        </div>
+                        <div className="space-y-2">
+                           <Label
+                              htmlFor="category"
+                              className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
+                           >
+                              Category
+                           </Label>
+                           <Controller
+                              name="category"
+                              control={control}
+                              render={({ field }) => (
+                                 <FormSelect
+                                 value={field.value}
+                                 onChange={field.onChange}
+                                 options={categoryOptions}
+                                 placeholder="Select a categroy"
+                                 label="Categories"
+                                 disabled={loadingCategories}
+                                 id="category"
+                                 isLoading={loadingCategories}
+                                 className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                 />
+                              )}
+                           />
+                           {errors.category && (
+                              <p className="text-xs text-red-500">
+                                 {errors.category.message}
+                              </p>
+                           )}
+                        </div>
+                        <div className="space-y-2">
+                           <Label
+                              htmlFor="location"
+                              className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
+                           >
+                              Location
+                           </Label>
+                           <Controller
+                              name="location"
+                              control={control}
+                              render={({ field }) => (
+                                 <FormSelect
+                                 value={field.value ?? ""}
+                                 onChange={field.onChange}
+                                 options={locationOptions}
+                                 placeholder="Select a location"
+                                 label="Location"
+                                 disabled={loadingLocations}
+                                 id="location"
+                                 isLoading={loadingLocations}
+                                 className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                 />
+                              )}
+                           />
+                           {errors.location && (
+                              <p className="text-xs text-red-500">
+                                 {errors.location.message}
+                              </p>
+                           )}
+                        </div>
+                        <div className="space-y-2">
+                           <Label
+                              htmlFor="experience"
+                              className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
+                           >
+                              Experience
+                           </Label>
+                           <Controller
+                              name="experience"
+                              control={control}
+                              render={({ field }) => (
+                                 <FormSelect
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    options={[
+                                    { value: "entry", label: "Entry" },
+                                    { value: "junior", label: "Junior" },
+                                    { value: "mid", label: "Mid" },
+                                    { value: "senior", label: "Senior" },
+                                    { value: "lead", label: "Lead" },
+                                    { value: "executive", label: "Executive" },
+                                    ]}
+                                    placeholder="Select experience"
+                                    label="Experience"
+                                    id="experience"
+                                    className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                 />
+                              )}
+                           />
+                           {errors.experience && (
+                              <p className="text-xs text-red-500">
+                                 {errors.experience.message}
+                              </p>
+                           )}
+                        </div>
+                        <div className="space-y-2">
+                           <Label
+                              htmlFor="education"
+                              className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
+                           >
+                              Education
+                           </Label>
+                           <Controller
+                              name="education"
+                              control={control}
+                              render={({ field }) => (
+                                 <FormSelect
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    options={[
+                                    { value: "high-school", label: "High-school" },
+                                    { value: "bachelor", label: "Bachelor" },
+                                    { value: "master", label: "Master" },
+                                    { value: "phd", label: "Phd" },
+                                    { value: "none", label: "None" },
+                                    ]}
+                                    placeholder="Select education"
+                                    label="Education"
+                                    id="education"
+                                    className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                 />
+                              )}
+                           />
+                           {errors.education && (
+                              <p className="text-xs text-red-500">
+                                 {errors.education.message}
+                              </p>
+                           )}
                         </div>
                      </div>
+
                   </FormSection>
 
                <FormSection
@@ -348,70 +470,6 @@ const Create = () => {
                   </div>
                </FormSection>
 
-               <FormSection className="p-5 border border-gray-200 space-y-6 rounded-md">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                     <div className="space-y-2">
-                     <Label
-                        htmlFor="category"
-                        className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
-                     >
-                        Category
-                     </Label>
-                     <Controller
-                        name="category"
-                        control={control}
-                        render={({ field }) => (
-                           <FormSelect
-                           value={field.value}
-                           onChange={field.onChange}
-                           options={categoryOptions}
-                           placeholder="Select a categroy"
-                           label="Categories"
-                           disabled={loadingCategories}
-                           id="category"
-                           isLoading={loadingCategories}
-                           className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
-                           />
-                        )}
-                     />
-                     {errors.category && (
-                        <p className="text-xs text-red-500">
-                           {errors.category.message}
-                        </p>
-                     )}
-                     </div>
-                     <div className="space-y-2">
-                     <Label
-                        htmlFor="location"
-                        className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
-                     >
-                        Location
-                     </Label>
-                     <Controller
-                        name="location"
-                        control={control}
-                        render={({ field }) => (
-                           <FormSelect
-                           value={field.value ?? ""}
-                           onChange={field.onChange}
-                           options={locationOptions}
-                           placeholder="Select a location"
-                           label="Location"
-                           disabled={loadingLocations}
-                           id="location"
-                           isLoading={loadingLocations}
-                           className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
-                           />
-                        )}
-                     />
-                     {errors.location && (
-                        <p className="text-xs text-red-500">
-                           {errors.location.message}
-                        </p>
-                     )}
-                     </div>
-                  </div>
-               </FormSection>
                </div>
 
                {/* RIGHT */}
@@ -467,72 +525,20 @@ const Create = () => {
                      )}
                   </div>
                   <div className="space-y-2">
-                     <Label
-                     htmlFor="experience"
-                     className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
-                     >
-                     Experience
-                     </Label>
                      <Controller
-                     name="experience"
-                     control={control}
-                     render={({ field }) => (
-                        <FormSelect
-                           value={field.value}
-                           onChange={field.onChange}
-                           options={[
-                           { value: "entry", label: "Entry" },
-                           { value: "junior", label: "Junior" },
-                           { value: "mid", label: "Mid" },
-                           { value: "senior", label: "Senior" },
-                           { value: "lead", label: "Lead" },
-                           { value: "executive", label: "Executive" },
-                           ]}
-                           placeholder="Select experience"
-                           label="Experience"
-                           id="experience"
-                           className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
-                        />
-                     )}
+                        name="salary"
+                        control={control}
+                        render={({ field }) => (
+                           <SalaryInput
+                              value={field.value}
+                              onChange={field.onChange}
+                           />
+                        )} 
                      />
-                     {errors.experience && (
-                     <p className="text-xs text-red-500">
-                        {errors.experience.message}
-                     </p>
-                     )}
-                  </div>
-                  <div className="space-y-2">
-                     <Label
-                     htmlFor="education"
-                     className="text-[0.85rem] font-semibold text-gray-700 leading-tight"
-                     >
-                     Education
-                     </Label>
-                     <Controller
-                     name="education"
-                     control={control}
-                     render={({ field }) => (
-                        <FormSelect
-                           value={field.value}
-                           onChange={field.onChange}
-                           options={[
-                           { value: "high-school", label: "High-school" },
-                           { value: "bachelor", label: "Bachelor" },
-                           { value: "master", label: "Master" },
-                           { value: "phd", label: "Phd" },
-                           { value: "none", label: "None" },
-                           ]}
-                           placeholder="Select education"
-                           label="Education"
-                           id="education"
-                           className="rounded-md focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
-                        />
-                     )}
-                     />
-                     {errors.education && (
-                     <p className="text-xs text-red-500">
-                        {errors.education.message}
-                     </p>
+                     {errors.salary?.max && (
+                        <p className="text-xs text-red-500">
+                           {errors.salary.max.message}
+                        </p>
                      )}
                   </div>
                   <div className="space-y-2">
@@ -566,24 +572,24 @@ const Create = () => {
                <FormSection className="p-5 border border-gray-200 space-y-6 rounded-md">
                   <div className="">
                      <div className="flex items-center justify-between py-2">
-                     <div>
-                        <Label htmlFor="isFeatured">Featured Post</Label>
-                        <span className="text-xs text-gray-400">
-                           Pin top of career page
-                        </span>
-                     </div>
-                     <Controller
-                           name="isFeatured"
-                           control={control}
-                           render={({ field }) => (
-                              <Switch
-                                 id="isFeatured"
-                                 checked={field.value}
-                                 onCheckedChange={field.onChange}
-                                 className="data-checked:bg-teal-600"
-                              />
-                           )}
-                     />
+                        <div>
+                           <Label htmlFor="isFeatured">Featured Post</Label>
+                           <span className="text-xs text-gray-400">
+                              Pin top of career page
+                           </span>
+                        </div>
+                        <Controller
+                              name="isFeatured"
+                              control={control}
+                              render={({ field }) => (
+                                 <Switch
+                                    id="isFeatured"
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                    className="data-checked:bg-teal-600 cursor-pointer"
+                                 />
+                              )}
+                        />
                      </div>
 
                      <div className="flex items-center justify-between py-2">
@@ -601,7 +607,7 @@ const Create = () => {
                                  id="isUrgent"
                                  checked={field.value}
                                  onCheckedChange={field.onChange}
-                                 className="data-checked:bg-teal-600"
+                                 className="data-checked:bg-teal-600 cursor-pointer"
                               />
                            )}
                      />
@@ -611,13 +617,14 @@ const Create = () => {
                      <Button
                      type="button"
                      variant="outline"
-                     className="min-h-12 px-6"
+                     className="min-h-11 px-6"
                      >
                      Save Draft
                      </Button>
                      <Button
-                     type="submit"
-                     className="min-h-12 min-w-1/2 bg-teal-600 hover:bg-teal-700"
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="min-h-11 min-w-1/2 bg-teal-600 hover:bg-teal-700"
                      >
                      Publish Job
                      </Button>

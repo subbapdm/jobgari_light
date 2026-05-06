@@ -62,14 +62,14 @@ export function FormDate({
       return (
          <Popover>
             <PopoverTrigger asChild>
-            <Button
-               variant="outline"
-               data-empty={!date}
-               className={cn("w-full justify-start text-left data-[empty=true]:text-muted-foreground", className ?? "")}
-            >
-               <CalendarIcon />
-               {date ? format(date, "PPP") : <span>Pick a date</span>}
-            </Button>
+               <Button
+                  variant="outline"
+                  data-empty={!date}
+                  className={cn("w-full justify-start text-left data-[empty=true]:text-muted-foreground", className ?? "")}
+               >
+                  <CalendarIcon />
+                  {date ? format(date, "PPP") : <span>Pick a date</span>}
+               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-2">
                <div className="flex justify-between gap-2">

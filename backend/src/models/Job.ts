@@ -21,6 +21,7 @@ const jobSchema = new mongoose.Schema({
    },
    slug: {
       type: String,
+      required: true,
       unique: true
    },
    description: {
@@ -47,19 +48,16 @@ const jobSchema = new mongoose.Schema({
       required: true
    },
    salary: {
-      min: {
-         type: Number,
-         default: null
-      },
-      max: {
-         type: Number,
-         default: null
-      }
+      min: { type: Number, default: null },
+      max: { type: Number, default: null },
+      currency: { type: String, enum: ["USD", "EUR", "GBP"], default: "USD" },
+      period: { type: String, enum: ["hourly", "monthly", "annually"], default: "monthly"},
+      undisclosed: { type: Boolean, default: false }
    },
    experience: {
       type: String,
       enum: ["entry", "junior", "mid", "senior", "lead", "executive"],
-      requiredd: true
+      required: true
    },
    education: {
       type: String,
