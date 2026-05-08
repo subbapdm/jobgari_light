@@ -272,7 +272,7 @@ const Create = () => {
                                     disabled={loadingCompanies}
                                     isLoading={loadingCompanies}
                                     id="company"
-                                    className="min-h-11 rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                    className="min-h-11 w-full rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
                                  />
                               )}
                            />
@@ -298,7 +298,7 @@ const Create = () => {
                                     onChange={field.onChange}
                                     startYear={getYear(new Date())}
                                     endYear={getYear(new Date()) + 5}
-                                    className="min-h-11 text-gray-500 font-normal rounded-sm"
+                                    className="min-h-11 w-full text-gray-500 font-normal rounded-sm"
                                  />
                               )}
                            />
@@ -328,7 +328,7 @@ const Create = () => {
                                     disabled={loadingCategories}
                                     id="category"
                                     isLoading={loadingCategories}
-                                    className="min-h-11 rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                    className="min-h-11 w-full rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
                                  />
                               )}
                            />
@@ -358,7 +358,7 @@ const Create = () => {
                                     disabled={loadingLocations}
                                     id="location"
                                     isLoading={loadingLocations}
-                                    className="min-h-11 rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                    className="min-h-11 w-full rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
                                  />
                               )}
                            />
@@ -393,7 +393,7 @@ const Create = () => {
                                     placeholder="Select experience"
                                     label="Experience"
                                     id="experience"
-                                    className="min-h-11 rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                    className="min-h-11 w-full rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
                                  />
                               )}
                            />
@@ -427,7 +427,7 @@ const Create = () => {
                                     placeholder="Select education"
                                     label="Education"
                                     id="education"
-                                    className="min-h-11 rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                    className="min-h-11 w-full rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
                                  />
                               )}
                            />
