@@ -11,8 +11,6 @@ import SignUp from "@/pages/auth/SignUp";
 import Home from "@/pages/Home";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import PublicRoute from "@/components/auth/PublicRoute";
-import useAuthStore from "@/store/useAuthStore";
-import { useEffect } from "react";
 
 const AppRouter = () => {
 

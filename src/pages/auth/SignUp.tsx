@@ -28,7 +28,7 @@ export type SignUpData = z.infer<typeof signupSchema>
 const SignUp = () => {
    const [submitting, setSubmitting] = useState(false);
    const navigate = useNavigate();
-   const { SignUp } = useAuthStore();
+   const { signUp } = useAuthStore();
 
    const { register, control, handleSubmit, formState: { errors }} = useForm<SignUpData>({
       resolver: zodResolver(signupSchema),
@@ -44,7 +44,7 @@ const SignUp = () => {
       setSubmitting(true);
 
       try {
-         await SignUp(data);
+         await signUp(data);
          toast.success("Signup successfully!");
          navigate("/sign-in");
       } catch (err) {

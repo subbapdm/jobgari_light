@@ -8,9 +8,53 @@ interface AuthRequest extends Request{
 
 export const getJobs = async (req: Request, res: Response) => {
    try {
-      
+      const page = Math.max(1, parseInt(req.query.page as string) || 1);
+      const limit = Math.min(100, parseInt(req.query.limit as string) || 10);
+      const skip = (page - 1) * limit;
+      const { search, status, jobType, sort = "-createdAt" } = req.query as Record<string, string>;
+
+      const filter: Record<string, unknown> = {};
+
+      if(search?.trim()){
+         filter.title = { $regex: search.trim(), $options: "i" };
+      }
+
+      if(status && ["draft", "active", "expired"].includes(status)){
+         filter.status = status;
+      }
+
+      if(jobType && ["full-time", "part-time", "contract", "internship"].includes(jobType)){
+         filter.jobType = jobType;
+      }
+
+      const [jobs, total] = await Promise.all([
+         Job.find(filter)
+            .populate("company", "name logo")
+            .populate("category", "name")
+            .sort(sort)
+            .skip(skip)
+            .limit(limit)
+            .lean(),
+         Job.countDocuments(filter)
+      ]);
+
+      const totalPages = Math.ceil(total / limit);
+
+      res.status(200).json({
+         success: true,
+         data: jobs,
+         pagination: {
+            total,
+            page,
+            limit,
+            totalPages,
+            hasNext: page < totalPages,
+            hasPrev: page > 1
+         }
+      })
    } catch (err) {
-      
+      console.log("[getJobs]", err);
+      res.status(500).json({ message: "Internal server error" });
    }
 };
 
@@ -51,6 +95,7 @@ export const createJob = async (req: AuthRequest, res: Response) => {
 
       res.status(201).json({ message: "Job created successfully", job });
    } catch (err) {
+      console.log("[createJob]", err);
       res.status(500).json({ message: "Internal server error" });
    }
 };

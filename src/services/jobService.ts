@@ -1,21 +1,36 @@
 import type { JobFormData } from "@/pages/admin/jobs/Create";
 import { ApiClient } from "./client";
 import type { ApiResponse } from "@/types/api.types";
+import type { Job } from "@/types/job.types";
 
+export interface JobsParams {
+   page?: number;
+   limit?: number;
+   search?: string;
+   status?: string;
+   jobType?: string;
+   sort?: string;
+};
 
 export class JobsService extends ApiClient {
-
    /**
     * Get all jobs
    */
-   async getJobs(): Promise<ApiResponse>{
-      return this.request("/jobs");
+   async getJobs(params: JobsParams = {}): Promise<ApiResponse<Job[]>>{
+      const query = new URLSearchParams();
+
+      Object.entries(params).forEach(([key, val]) => {
+         if(val !== undefined && val !== "") query.append(key, String(val))
+      });
+
+      const qs = query.toString();
+      return this.request(`/jobs${qs ? `?${qs}` : ""}`);
    }
 
    /**
     * Create a new job
    */
-   async createJob(data: JobFormData): Promise<ApiResponse> {
+   async createJob(data: JobFormData): Promise<ApiResponse<Job>> {
       return this.request("/jobs", {
          method: "POST",
          body: JSON.stringify(data)

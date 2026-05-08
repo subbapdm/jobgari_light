@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Building2, Check, MapPin, Sparkle, Sparkles, Wifi } from "lucide-react";
+import { Building2, Loader2, MapPin, Sparkles, Wifi } from "lucide-react";
 import { getYear } from "date-fns";
 import { toast } from "sonner";
 
@@ -25,7 +25,7 @@ import { FormDate } from "@/components/form/FormDate";
 import { slugify } from "@/utils/helper";
 import BadgeInput from "@/components/form/BadgeInput";
 import SalaryInput from "@/components/form/SalaryInput";
-import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 const jobSchema = z.object({
    title: z
@@ -79,8 +79,8 @@ export type JobFormData = z.infer<typeof jobSchema>;
 
 const Create = () => {
    const [isSubmitting, setIsSubmitting] = useState(false);
-
    const hasManualSlug = useRef(false);
+   const navigate = useNavigate();
 
    const { data: companiesData, isLoading: loadingCompanies } = useQuery({
       queryKey: ["companies"],
@@ -168,23 +168,26 @@ const Create = () => {
       setValue("slug", generatedSlug)
    }, [title, setValue]);
 
-
-   const salary = watch("salary");
-   console.log(salary);
-
    const slugRegistration = register("slug");
 
    const onSubmit = async (data: JobFormData) => {
       setIsSubmitting(true);
 
       try {
-         const result = await jobsService.createJob(data);
-         toast.success("Job created!");
+         await jobsService.createJob(data);
+         toast.success("Job created successfully!");
+         navigate("/admin/jobs");
       } catch (err) {
+         toast.success("Failed to create job. Please try again.");
       } finally {
          setIsSubmitting(false);
       }
    };
+
+   const handleSaveDraft = () => {
+      setValue("status", "draft");
+      handleSubmit(onSubmit)();
+   }
 
    return (
       <div className="space-y-4">
@@ -439,7 +442,7 @@ const Create = () => {
                   </FormSection>
 
                   <FormSection className="p-5 border border-gray-200 space-y-5 rounded-md">
-                     <div>
+                     <div className="space-y-2">
                         <div className="flex items-center justify-between">
                            <Label htmlFor="description" className="text-[0.85rem] font-semibold text-gray-700 leading-tight">
                               Job Description <span className="text-red-500">*</span>
@@ -461,6 +464,11 @@ const Create = () => {
                               />
                            )}
                         />
+                        {errors.description && (
+                           <p className="text-xs text-red-500">
+                              {errors.description.message}
+                           </p>
+                        )}
                      </div>
                   </FormSection>
 
@@ -552,7 +560,7 @@ const Create = () => {
                                  onChange={field.onChange}
                                  placeholder="Add skill..."
                                  suggestings={["Prototyping", "Photoshop", "Maya"]}
-                                 className="min-h-11 rounded-md bg-gray-50 focus-within:border-teal-100 focus-within:ring-1 focus-within:ring-teal-100"
+                                 className="min-h-11 rounded-sm bg-white focus-within:border-teal-100 focus-within:ring-1 focus-within:ring-teal-100"
                               />
                            )}
                         />
@@ -612,6 +620,8 @@ const Create = () => {
                         <Button
                            type="button"
                            variant="outline"
+                           onClick={handleSaveDraft}
+                           disabled={isSubmitting}
                            className="flex-1 min-h-11 px-6"
                         >
                            Save Draft
@@ -621,7 +631,9 @@ const Create = () => {
                            disabled={isSubmitting}
                            className="flex-2 min-h-11 bg-teal-600 hover:bg-teal-700"
                         >
-                           Publish Job
+                           {isSubmitting ? (<>
+                              <Loader2 className="size-4" /> <span>Publishing...</span>
+                           </>) : <span>Publish Job</span>}
                         </Button>
                      </div>
                   </FormSection>

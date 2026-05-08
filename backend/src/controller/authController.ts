@@ -11,7 +11,7 @@ import type { AuthRequest } from "../middleware/authMiddleware";
  * @route POST /api/auth/signup
  * @access Public
  */
-export const SignUp = async (req: Request, res: Response) => {
+export const signUp = async (req: Request, res: Response) => {
    try {
       const { name, email, password, role } = req.body;
 
@@ -25,8 +25,9 @@ export const SignUp = async (req: Request, res: Response) => {
       const user = await User.create({ name, email, password: hashedPassword, role });
 
       res.status(201).json({
+         success: true,
          message: "Account created successfully.",
-         user: {
+         data: {
             _id: user._id,
             name: user.name,
             email: user.email,
@@ -44,7 +45,7 @@ export const SignUp = async (req: Request, res: Response) => {
  * @route POST /api/auth/signin
  * @access Public
  */
-export const SignIn = async (req: Request, res: Response) => {
+export const signIn = async (req: Request, res: Response) => {
    try {
       const { email, password: passwordBody } = req.body;
 
@@ -63,8 +64,11 @@ export const SignIn = async (req: Request, res: Response) => {
       const {password, ...rest} = user.toObject();
 
       res.status(200).json({
+         success: true,
          message: "Signed in successfully.",
-         user: rest
+         data: {
+            ...rest
+         }
       })
    } catch (err) {
       console.error("[SignIn]", err);
@@ -80,7 +84,8 @@ export const SignIn = async (req: Request, res: Response) => {
 export const getMe = async (req: AuthRequest, res: Response) => {
    try {
       res.json({
-         user: {
+         success: true,
+         data: {
             _id: req.user?._id,
             email: req.user?.email,
             name: req.user?.name,
@@ -107,7 +112,9 @@ export const logout = async (req: Request, res: Response) => {
       });
 
       res.status(200).json({
-         message: "Logged out successfully"
+         success: true,
+         message: "Logged out successfully",
+         data: null,
       })
    } catch (err) {
       console.log("[Logout]", err);
@@ -129,7 +136,8 @@ export const refresh = async (req: AuthRequest, res: Response) => {
       generateToken(res, req.user._id.toString());
 
       res.json({
-         user: {
+         success: true,
+         data: {
             _id: req.user._id,
             email: req.user.email,
             name: req.user.name,

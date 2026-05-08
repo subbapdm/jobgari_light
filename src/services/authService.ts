@@ -10,47 +10,29 @@ export class AuthService extends ApiClient {
     * Sign up new user
    */
    async SignUp(data: SignUpData): Promise<ApiResponse<User>>{
-      const res = await this.request<{ message: string; user: User }>("/auth/signup", {
+      return this.request("/auth/signup", {
          method: "POST",
          body: JSON.stringify(data)
       });
-
-      return{
-         success: true,
-         message: res.message,
-         data: res.user
-      }
    };
 
    /**
     *  Sign In user
     */
    async SignIn(data: SignInData): Promise<ApiResponse<User>>{
-      const res = await this.request<{ message: string; user: User }>("/auth/signin", {
+      return this.request("/auth/signin", {
          method: "POST",
          body: JSON.stringify(data)
       });
-
-      return {
-         success: true,
-         message: res.message,
-         data: res.user
-      }
    };
 
    /**
     * Get current user
     */
    async AuthCheck(): Promise<ApiResponse<User>>{
-      const res = await this.request<{ message: string; user: User }>("/auth/me", {
+      return this.request("/auth/me", {
          method: "GET"
       });
-
-      return{
-         success: true,
-         message: res.message,
-         data: res.user
-      }
    }
 
    /**

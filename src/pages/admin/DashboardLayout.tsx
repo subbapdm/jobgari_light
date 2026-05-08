@@ -31,7 +31,8 @@ const DashboardLayout = () => {
 
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div className="min-h-screen flex bg-slate-50">
+      
       <aside className={cn("h-screen bg-white border-r border-slate-200 flex flex-col transition-all duration-300", isMobile ? "fixed inset-y-0 left-0 -translate-x-full" : "translate-x-0", (isMobile && isOpen) && "translate-x-0 z-50", isCollapsed ? "w-16" : "w-64")}>
         <Sidebar isCollapsed={isCollapsed} />
       </aside>
@@ -41,9 +42,9 @@ const DashboardLayout = () => {
           <div className="fixed inset-0 bg-black/25 z-40 backdrop-blur-sm" onClick={handleToggle} />
         )}
 
-      <main className="flex-1">
+      <main className="flex-1 min-w-0">
         <Navbar handleToggle={handleToggle} isCollapsed={isCollapsed}/>
-        <div className="p-8">
+        <div className="p-4 md:p-8">
           <Outlet />
         </div>
       </main>

@@ -37,7 +37,7 @@ interface SidebarProps {
    isCollapsed: boolean;
 }
 const Sidebar = ({ isCollapsed }: SidebarProps) => {
-   const { Logout } = useAuthStore();
+   const { logout } = useAuthStore();
 
    return (
          <>
@@ -63,7 +63,7 @@ const Sidebar = ({ isCollapsed }: SidebarProps) => {
             </nav>
 
             <div>
-               <Button onClick={() => Logout()} className="min-h-12 w-full rounded-none bg-red-50 text-red-600">
+               <Button onClick={() => logout()} className="min-h-12 w-full rounded-none bg-red-50 text-red-600">
                   <LogOut />
                   {!isCollapsed && (
                      <span>Logout</span>

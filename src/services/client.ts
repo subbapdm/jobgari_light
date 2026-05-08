@@ -9,9 +9,7 @@ export class ApiClient {
 
    protected async request<T>(endpoint: string, options: RequestInit = {}): Promise<T>{
       const response = await fetch(`${this.baseUrl}${endpoint}`, {
-         headers: {
-            "Content-Type": "application/json"
-         },
+         headers: { "Content-Type": "application/json" },
          credentials: "include",
          ...options
       });

@@ -21,7 +21,7 @@ const SignIn = () => {
    const [submitting, setSubmitting] = useState(false);
    const navigate = useNavigate();
 
-   const { SignIn } = useAuthStore();
+   const { signIn } = useAuthStore();
 
    const { register, handleSubmit, formState: { errors } } = useForm({
       resolver: zodResolver(signinSchema),
@@ -34,7 +34,7 @@ const SignIn = () => {
    const onSubmit = async (data: SignInData) => {
       setSubmitting(true);
       try {
-         await SignIn(data);
+         await signIn(data);
          toast.success("Signed in successfully");
          navigate("/admin");
       } catch (err) {

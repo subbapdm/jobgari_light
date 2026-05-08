@@ -44,7 +44,7 @@ const BadgeInput = ({ value = [], onChange, placeholder, className, suggestings 
       <div className="space-y-3">
          <div onClick={() => inputRef.current?.focus()} className={cn("flex flex-wrap gap-2 transition p-2 border border-gray-200", className)}>
             {value.map((item) => (
-               <span key={item} role="listitem" className="inline-flex items-center gap-1 pl-2.5 pr-1.5 py-1 rounded-full bg-teal-100 text-teal-700 text-[0.7rem] font-medium">
+               <span key={item} role="listitem" className="inline-flex items-center gap-1 pl-2.5 pr-1.5 py-1 rounded-full bg-teal-100/80 text-teal-700 text-[0.7rem] font-medium">
                   {item}
                   <button type="button" aria-label={`Remove ${item}`} onClick={(e) => { e.stopPropagation(); remove(item)}} className="size-4 grid place-items-center rounded hover:bg-teal-300 cursor-pointer">
                      <X className="size-3.5" />
@@ -69,7 +69,7 @@ const BadgeInput = ({ value = [], onChange, placeholder, className, suggestings 
                </p>
                <div className="flex flex-wrap gap-1.5">
                   {filteredSuggestions.map((s) => (
-                     <button key={s} type="button" onClick={() => commit(s)} className="text-xs px-2.5 py-1 rounded-lg border border-dashed border-gray-200 text-muted-foreground hover:border-gray-300 hover:text-gray-400 hover:bg-gray-50 transition cursor-pointer">
+                     <button key={s} type="button" onClick={() => commit(s)} className="text-xs px-2.5 py-1 rounded-full border border-dashed border-gray-200 text-muted-foreground hover:border-gray-300 hover:text-gray-400 hover:bg-gray-50 transition cursor-pointer">
                         + {s}
                      </button>
                   ))}

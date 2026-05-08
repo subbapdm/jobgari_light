@@ -10,10 +10,10 @@ interface AuthState {
    loading: boolean;
    isAuthenticated: boolean;
 
-   SignUp: (data: SignUpData) => Promise<void>;
-   SignIn: (data: SignInData) => Promise<void>;
-   AuthCheck: () => Promise<void>;
-   Logout: () => Promise<void>;
+   signUp: (data: SignUpData) => Promise<void>;
+   signIn: (data: SignInData) => Promise<void>;
+   authCheck: () => Promise<void>;
+   logout: () => Promise<void>;
 }
 
 const useAuthStore = create<AuthState>()(
@@ -23,71 +23,68 @@ const useAuthStore = create<AuthState>()(
          loading: false,
          isAuthenticated: false,
 
-         SignUp: async (data: SignUpData) => {
-            try {
-               set({ loading: true });
+         signUp: async (data: SignUpData) => {
+            set({ loading: true });
 
+            try {
               await authService.SignUp(data);
-
-               set({ loading: false })
             } catch (err) {
-               set({ loading: false });
                throw err;
+            } finally {
+               set({ loading: false });
             }
          },
-         SignIn: async (data: SignInData) => {
-            try {
-               set({ loading: true });
+         signIn: async (data: SignInData) => {
+            set({ loading: true });
 
+            try {
                const response = await authService.SignIn(data);
+               console.log(response);
                set({
                   user: response.data,
                   isAuthenticated: true,
-                  loading: false
                });
             } catch (err) {
                set({
-                  loading: false,
-                  isAuthenticated: false,
-                  user: null
+                  user: null,
+                  isAuthenticated: false
                });
                throw err;
-            }
-         },
-         AuthCheck: async () => {
-            try {
-               set({ loading: true });
-
-               const response = await authService.AuthCheck();
-
-               set({
-                  user: response.data,
-                  isAuthenticated: true,
-                  loading: false
-               });
-            } catch (err) {
-               set({
-                  user: null,
-                  isAuthenticated: false,
-                  loading: false
-               });
-            }
-         },
-         Logout: async () => {
-            try {
-               set({ loading: true });
-
-               await authService.Logout();
-
-               set({
-                  user: null,
-                  isAuthenticated: false,
-                  loading: false
-               });
-               localStorage.removeItem("auth-store");
-            } catch (err) {
+            } finally {
                set({ loading: false });
+            }
+         },
+         authCheck: async () => {
+            set({ loading: true });
+
+            try {
+               const response = await authService.AuthCheck();
+               set({
+                  user: response.data,
+                  isAuthenticated: true,
+               });
+            } catch (err) {
+               set({
+                  user: null,
+                  isAuthenticated: false
+               });
+            } finally {
+               set({ loading: false });
+            }
+         },
+         logout: async () => {
+            set({ loading: true });
+
+            try {
+               await authService.Logout();
+               set({
+                  user: null,
+                  isAuthenticated: false
+               });
+            } catch (err) {
                throw err;
+            } finally {
+               set({ loading: false });
             }
          }
 
@@ -102,7 +99,7 @@ const useAuthStore = create<AuthState>()(
          onRehydrateStorage: () => (state) => {
             if(state){
                // Automatically check auth after rehydration
-               state.AuthCheck();
+               state.authCheck();
             }
          }
       },
