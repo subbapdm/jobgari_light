@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Input } from "@/components/ui/input";
 import { jobsService } from "@/services/jobService";
 import { useQuery } from "@tanstack/react-query";
-import { Download, Eye, MoreHorizontalIcon, Plus, Search, Trash } from "lucide-react";
+import { Download, Eye, MoreHorizontalIcon, Plus, RotateCcw, Search, Trash, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -29,6 +29,7 @@ const Jobs = () => {
    const [search, setSearch] = useState("");
    const [status, setStatus] = useState("");
    const [jobType, setJobType] = useState("");
+   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
    const navigate = useNavigate();
 
@@ -41,7 +42,23 @@ const Jobs = () => {
       })
    });
 
-   console.log(data?.jobs);
+   const selectedAll = data?.jobs.length > 0 && data?.jobs.length === selectedItems.length;
+
+   const selectAll = () => {
+      if(selectedAll){
+         setSelectedItems([]);
+      } else {
+         setSelectedItems(data?.jobs.map((job) => job._id));
+      }
+   };
+
+   const handleSelect = (id: string) => {
+      if(selectedItems.includes(id)){
+         return setSelectedItems(prev => prev.filter(item => item !== id))
+      } else {
+         return setSelectedItems(prev => ([ ...prev, id ]));
+      }
+   }
 
    const handleTypeChange = (val: string) => {
       setJobType(val);
@@ -55,7 +72,7 @@ const Jobs = () => {
    return (
       <div className="space-y-4">
          <div className="flex items-center justify-between">
-            <div>
+            <div className="space-y-0.5">
                <h2 className="text-2xl font-bold text-slate-800">Manage jobs</h2>
                <p className="text-sm text-slate-400">Manage your job postings and track applications.</p>
             </div>
@@ -108,13 +125,43 @@ const Jobs = () => {
             <table className="w-full mx-auto">
                <thead className="border-b border-dashed border-gray-200 text-gray-500 text-left text-[0.85rem]">
                   <tr>
-                     <th className="p-4 font-medium">Job</th>
-                     <th className="p-4 font-medium">Company</th>
-                     <th className="p-4 font-medium">Type</th>
-                     <th className="p-4 font-medium">Status</th>
-                     <th className="p-4 font-medium">Applications</th>
-                     <th className="p-4 font-medium">Deadline</th>
-                     <th className="p-4 font-medium">Actions</th>
+                     <th className="p-4">
+                        <Checkbox
+                           checked={selectedAll}
+                           onCheckedChange={() => selectAll()}
+                           disabled={data?.jobs.length === 0}
+                           className="size-5 data-[state=checked]:bg-teal-500 data-[state=checked]:border-teal-500"
+                        />
+                     </th>
+                     {selectedItems.length > 0 ? (
+                        <td colSpan={12} className="p-4">
+                           <div className="flex items-center justify-between">
+                              <span className="text-sm font-medium text-gray-700">
+                                 {selectedItems.length} selected
+                              </span>
+                              <div className="flex items-center gap-2">
+                                 <Button onClick={() => setSelectedItems([])} variant="outline" className="min-h-10 px-3 bg-white text-gray-500">
+                                    <RotateCcw />
+                                    Clear
+                                 </Button>
+                                 <Button onClick={() => {}} disabled={false} className="min-h-10 px-3 bg-red-500">
+                                    <Trash2 className="size-4 mr-2" />
+                                    Delete
+                                 </Button>
+                              </div>
+                           </div>
+                        </td>
+                     ) : (
+                        <>
+                           <th className="p-4 font-medium">Job</th>
+                           <th className="p-4 font-medium">Company</th>
+                           <th className="p-4 font-medium">Type</th>
+                           <th className="p-4 font-medium">Status</th>
+                           <th className="p-4 font-medium">Applications</th>
+                           <th className="p-4 font-medium">Deadline</th>
+                           <th className="p-4 font-medium">Actions</th>
+                        </>
+                     )}
                   </tr>
                </thead>
                <tbody className="divide-y divide-dashed divide-gray-200">
@@ -123,9 +170,9 @@ const Jobs = () => {
                      <tr key={job._id} className="hover:bg-gray-50 transition-colors">
                         <td className="p-4">
                            <Checkbox
-                              checked={false}
-                              onCheckedChange={() => {}}
-                              className="h-5 w-5 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                              checked={selectedItems.includes(job._id)}
+                              onCheckedChange={() => handleSelect(job._id)}
+                              className="size-5 data-[state=checked]:bg-teal-500 data-[state=checked]:border-teal-500"
                            />
                         </td>
                         <td className="px-4 py-3 font-medium text-gray-800">
@@ -138,7 +185,7 @@ const Jobs = () => {
                                  )}
                               </div>
                               <div className="flex flex-col">
-                                 <strong className="leading-tight text-[1rem]">{job.title}</strong>
+                                 <strong className="leading-tight text-[0.9rem]">{job.title}</strong>
                                  <span className="text-xs text-gray-400">{job.category.name}</span>
                               </div>
                            </div>
@@ -146,7 +193,7 @@ const Jobs = () => {
                         <td className="px-4 py-3 text-gray-500">
                            <strong className="text-[0.9rem] font-semibold text-slate-600">{job.company.name}</strong>
                         </td>
-                        <td className="px-4 py-3 text-[0.8rem] font-medium text-gray-500 capitalize">{job.jobType}</td>
+                        <td className="px-4 py-3 text-[0.8rem] font-medium text-gray-400 capitalize">{job.jobType}</td>
                         <td className="px-4 py-3">
                            {job.status === "active" ? (
                               <Badge className="min-h-6 px-2.5 bg-teal-100 text-teal-600">{job.status}</Badge>
@@ -163,7 +210,7 @@ const Jobs = () => {
                         <td className="px-4 py-3 font-medium text-gray-800">
                            <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                 <Button variant="ghost" size="icon" className="size-8 cursor-pointer">
+                                 <Button variant="ghost" size="icon" className="size-8 cursor-pointer text-gray-400">
                                     <MoreHorizontalIcon />
                                     <span className="sr-only">Open menu</span>
                                  </Button>
