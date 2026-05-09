@@ -534,7 +534,7 @@ const Create = () => {
                               <SalaryInput
                                  value={field.value}
                                  onChange={field.onChange}
-                                 className="min-h-11 rounded-sm"
+                                 className="min-h-11 rounded-sm w-full"
                               />
                            )} 
                         />
