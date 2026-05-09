@@ -108,7 +108,7 @@ const Jobs = () => {
                      placeholder="Search Jobs..."
                      value={search}
                      onChange={(e) => setSearch(e.target.value)}
-                     className="w-full pl-9 min-h-11 rounded-sm bg-white"
+                     className="w-full pl-9 min-h-11 rounded-sm bg-white focus-visible:border focus-visible:border-teal-400 focus-visible:ring-1 focus-visible:ring-teal-400"
                   />
                </div>
                <div className="">
@@ -134,7 +134,7 @@ const Jobs = () => {
                         />
                      </th>
                      {selectedItems.length > 0 ? (
-                        <td colSpan={12} className="p-4">
+                        <td colSpan={12} className="p-2.5">
                            <div className="flex items-center justify-between">
                               <span className="text-sm font-medium text-gray-700">
                                  {selectedItems.length} selected

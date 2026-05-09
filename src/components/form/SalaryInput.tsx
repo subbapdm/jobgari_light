@@ -89,7 +89,7 @@ const SalaryInput = ({ value = DEFAULT_SALARY, onChange, className }: SalaryInpu
                         min={0}
                         value={value[key] ?? ""}
                         onChange={(e) => patch({ [key]: e.target.value === "" ? undefined : Number(e.target.value ) })}
-                        className={cn("pl-7 text-sm focus-visible:border-teal-200 focus-visible:ring-1 focus-visible:ring-teal-200", className)}
+                        className={cn("pl-7 text-sm focus-visible:border focus-visible:border-teal-400 focus-visible:ring-1 focus-visible:ring-teal-400", className)}
                      />
                   </div>
                </div>

@@ -220,7 +220,7 @@ const Create = () => {
                            id="title"
                            {...register("title")}
                            placeholder="e.g. Frontent Developer"
-                           className="min-h-11 rounded-sm focus-visible:border focus-visible:border-teal-200 focus-visible:ring-1 focus-visible:ring-teal-200"
+                           className="min-h-11 rounded-sm focus-visible:border focus-visible:border-teal-400 focus-visible:ring-1 focus-visible:ring-teal-400"
                         />
                         {errors.title && (
                            <p className="text-xs text-red-500">
@@ -243,7 +243,7 @@ const Create = () => {
                               slugRegistration.onChange(e)
                            }}
                            placeholder="e.g. Frontent Developer"
-                           className="min-h-11 rounded-sm focus-visible:border focus-visible:border-teal-200 focus-visible:ring-1 focus-visible:ring-teal-200"
+                           className="min-h-11 rounded-sm focus-visible:border focus-visible:border-teal-400 focus-visible:ring-1 focus-visible:ring-teal-400"
                         />
                         {errors.slug && (
                            <p className="text-xs text-red-500">
@@ -272,7 +272,7 @@ const Create = () => {
                                     disabled={loadingCompanies}
                                     isLoading={loadingCompanies}
                                     id="company"
-                                    className="min-h-11 w-full rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                    className="min-h-11 w-full rounded-sm"
                                  />
                               )}
                            />
@@ -328,7 +328,7 @@ const Create = () => {
                                     disabled={loadingCategories}
                                     id="category"
                                     isLoading={loadingCategories}
-                                    className="min-h-11 w-full rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                    className="min-h-11 w-full rounded-sm"
                                  />
                               )}
                            />
@@ -358,7 +358,7 @@ const Create = () => {
                                     disabled={loadingLocations}
                                     id="location"
                                     isLoading={loadingLocations}
-                                    className="min-h-11 w-full rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                    className="min-h-11 w-full rounded-sm"
                                  />
                               )}
                            />
@@ -393,7 +393,7 @@ const Create = () => {
                                     placeholder="Select experience"
                                     label="Experience"
                                     id="experience"
-                                    className="min-h-11 w-full rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                    className="min-h-11 w-full rounded-sm"
                                  />
                               )}
                            />
@@ -427,7 +427,7 @@ const Create = () => {
                                     placeholder="Select education"
                                     label="Education"
                                     id="education"
-                                    className="min-h-11 w-full rounded-sm focus-visible:border focus-visible:border-teal-100 focus-visible:ring-1 focus-visible:ring-teal-100"
+                                    className="min-h-11 w-full rounded-sm"
                                  />
                               )}
                            />
@@ -560,7 +560,7 @@ const Create = () => {
                                  onChange={field.onChange}
                                  placeholder="Add skill..."
                                  suggestings={["Prototyping", "Photoshop", "Maya"]}
-                                 className="min-h-11 rounded-sm bg-white focus-within:border-teal-100 focus-within:ring-1 focus-within:ring-teal-100"
+                                 className="min-h-11 rounded-sm bg-white focus-within:border-teal-400 focus-within:ring-1 focus-within:ring-teal-400"
                               />
                            )}
                         />
