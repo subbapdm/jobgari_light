@@ -155,7 +155,7 @@ const Jobs = () => {
                         <>
                            <th className="p-4 font-medium">Job</th>
                            <th className="p-4 font-medium">Company</th>
-                           <th className="p-4 font-medium">Type</th>
+                           <th className="p-4 font-medium hidden md:table-cell">Type</th>
                            <th className="p-4 font-medium">Status</th>
                            <th className="p-4 font-medium">Applications</th>
                            <th className="p-4 font-medium">Deadline</th>
@@ -175,9 +175,9 @@ const Jobs = () => {
                               className="size-5 data-[state=checked]:bg-teal-500 data-[state=checked]:border-teal-500"
                            />
                         </td>
-                        <td className="px-4 py-3 font-medium text-gray-800">
+                        <td className="px-4 py-3 font-medium text-gray-800 w-px whitespace-nowrap">
                            <div className="flex items-center gap-3">
-                              <div className="size-10 bg-slate-300 flex items-center justify-center text-lg font-bold text-slate-400 rounded-full p-0.5 shrink-0">
+                              <div className="size-10 bg-slate-200 flex items-center justify-center text-lg font-bold text-slate-300 rounded-full p-0.5 shrink-0">
                                  {job.company.logo ? (
                                     <img src="" />
                                  ) : (
@@ -193,7 +193,7 @@ const Jobs = () => {
                         <td className="px-4 py-3 text-gray-500">
                            <strong className="text-[0.9rem] font-semibold text-slate-600">{job.company.name}</strong>
                         </td>
-                        <td className="px-4 py-3 text-[0.8rem] font-medium text-gray-400 capitalize">{job.jobType}</td>
+                        <td className="px-4 py-3 text-[0.8rem] font-medium text-gray-400 capitalize hidden md:table-cell">{job.jobType}</td>
                         <td className="px-4 py-3">
                            {job.status === "active" ? (
                               <Badge className="min-h-6 px-2.5 bg-teal-100 text-teal-600">{job.status}</Badge>
