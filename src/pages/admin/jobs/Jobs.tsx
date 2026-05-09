@@ -83,7 +83,7 @@ const Jobs = () => {
          </div>
 
          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            <div className="flex-1">
+            <div className="flex w-full sm:w-1/2 md:w-1/3  gap-3">
                <FormSelect
                   value={jobType}
                   onChange={handleTypeChange}
@@ -92,8 +92,6 @@ const Jobs = () => {
                   placeholder="All Types"
                   className="w-full min-h-11 rounded-sm bg-white"
                />
-            </div>
-            <div className="flex-1">
                <FormSelect
                   value={status}
                   onChange={handleStatusChange}
@@ -103,20 +101,22 @@ const Jobs = () => {
                   className="w-full min-h-11 rounded-sm bg-white"
                />
             </div>
-            <div className="relative flex-2">
-               <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
-               <Input
-                  placeholder="Search Jobs..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-9 min-h-11 rounded-sm bg-white"
-               />
-            </div>
-            <div>
-               <Button variant="outline" className="min-h-11 bg-white cursor-pointer px-6">
-                  <Download className="size-4" />
-                  Download
-               </Button>
+            <div className="flex w-full justify-between sm:w-1/2 md:w-2/3 gap-3">
+               <div className="relative max-w-md flex-2">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+                  <Input
+                     placeholder="Search Jobs..."
+                     value={search}
+                     onChange={(e) => setSearch(e.target.value)}
+                     className="w-full pl-9 min-h-11 rounded-sm bg-white"
+                  />
+               </div>
+               <div className="">
+                  <Button variant="outline" className="min-h-11 bg-white cursor-pointer px-4 sm:px-6">
+                     <Download className="size-4" />
+                     <span className="hidden sm:block">Download</span>
+                  </Button>
+               </div>
             </div>
          </div>
          
