@@ -82,8 +82,8 @@ const Jobs = () => {
             </Button>
          </div>
 
-         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            <div className="flex w-full sm:w-1/2 md:w-1/3  gap-3">
+         <div className="flex flex-col lg:flex-row items-stretch sm:items-center gap-3">
+            <div className="flex w-full lg:w-1/3  gap-3">
                <FormSelect
                   value={jobType}
                   onChange={handleTypeChange}
@@ -101,8 +101,8 @@ const Jobs = () => {
                   className="w-full min-h-11 rounded-sm bg-white"
                />
             </div>
-            <div className="flex w-full justify-between sm:w-1/2 md:w-2/3 gap-3">
-               <div className="relative max-w-md flex-2">
+            <div className="flex w-full justify-between lg:w-2/3 gap-3">
+               <div className="relative max-w-md xl:max-w-xl flex-2">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
                   <Input
                      placeholder="Search Jobs..."
