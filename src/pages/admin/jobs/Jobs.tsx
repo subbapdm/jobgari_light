@@ -148,6 +148,7 @@ const Jobs = () => {
       </div>
 
       <div className="bg-white overflow-x-auto rounded-lg relative">
+
         <table className="w-full mx-auto">
           <thead className="border-b border-dashed border-gray-200 text-gray-500 text-left text-[0.85rem]">
             <tr>
@@ -280,6 +281,7 @@ const Jobs = () => {
             ))}
           </tbody>
         </table>
+        
       </div>
     </div>
   );

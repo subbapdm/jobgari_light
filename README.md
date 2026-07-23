@@ -6,3 +6,8 @@ Dive deep into database query (complex and deep nested), performance optimizatio
 
 ```
 
+## Running with Docker
+   1. Copy `.env.example` to `.env` in both root and backend/, fill in real values
+   2. Run `docker compose up`
+   3. Frontend: http://localhost:5173
+   4. Backend: http://localhost:4500
