@@ -46,7 +46,7 @@ export function FormDate({
       const years = Array.from({ length: endYear - startYear + 1 }, (_, i) => startYear + i);
 
       const handleMonthChange = (month: string) => {
-        onChange(setMonth(date, month.indexOf(month)))
+        onChange(setMonth(date, months.indexOf(month)))
       }
 
       const handleYearChange = (year: string) => {

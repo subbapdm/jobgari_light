@@ -65,7 +65,7 @@ const SignIn = () => {
                      {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
                   </div>
                   <div className="space-y-2">
-                     <Label htmlFor="password" className="text-[0.8rem] font-semibold text-slate-600">Email</Label>
+                     <Label htmlFor="password" className="text-[0.8rem] font-semibold text-slate-600">Password</Label>
                      <Input
                         id="password"
                         type="password"
