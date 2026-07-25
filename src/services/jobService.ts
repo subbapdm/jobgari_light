@@ -4,12 +4,22 @@ import type { ApiResponse } from "@/types/api.types";
 import type { Job } from "@/types/job.types";
 
 export interface JobsParams {
-   page?: number;
-   limit?: number;
    search?: string;
    status?: string;
    jobType?: string;
-   sort?: string;
+   workMode?: string;
+   experience?: string;
+   education?: string;
+   category?: string;
+   location?: string;
+   company?: string;
+   salaryMin?: string;
+   salaryMax?: string;
+   isFeatured?: string;
+   isUrgent?: string;
+   sortBy?: string;
+   sortOrder?: string;
+   page?: string;
 };
 
 export class JobsService extends ApiClient {

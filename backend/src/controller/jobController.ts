@@ -1,6 +1,9 @@
 import type { Request, Response } from "express";
 import Job from "../models/Job";
 import type { IUser } from "../models/User";
+import { jobQuerySchema } from "../validators/job";
+import { buildJobFilter } from "../utils/jobFilters";
+import { populate } from "dotenv";
 
 interface AuthRequest extends Request{
    user?: IUser;
@@ -8,52 +11,39 @@ interface AuthRequest extends Request{
 
 export const getJobs = async (req: Request, res: Response) => {
    try {
-      const page = Math.max(1, parseInt(req.query.page as string) || 1);
-      const limit = Math.min(100, parseInt(req.query.limit as string) || 10);
-      const skip = (page - 1) * limit;
-      const { search, status, jobType, sort = "-createdAt" } = req.query as Record<string, string>;
+      const params = jobQuerySchema.parse(req.query);
+      const filter = buildJobFilter(params);
 
-      const filter: Record<string, unknown> = {};
-
-      if(search?.trim()){
-         filter.title = { $regex: search.trim(), $options: "i" };
-      }
-
-      if(status && ["draft", "active", "expired"].includes(status)){
-         filter.status = status;
-      }
-
-      if(jobType && ["full-time", "part-time", "contract", "internship"].includes(jobType)){
-         filter.jobType = jobType;
-      }
+      const skip = (params.page - 1) * params.limit;
+      const sortDirection = params.sortOrder === "asc" ? 1 : -1;
 
       const [jobs, total] = await Promise.all([
          Job.find(filter)
             .populate("company", "name logo")
             .populate("category", "name")
-            .sort(sort)
+            .populate("location", "city")
+            .sort({ [params.sortBy]: sortDirection })
             .skip(skip)
-            .limit(limit)
+            .limit(params.limit)
             .lean(),
-         Job.countDocuments(filter)
+         Job.countDocuments(filter),
       ]);
 
-      const totalPages = Math.ceil(total / limit);
-
       res.status(200).json({
-         success: true,
          data: jobs,
          pagination: {
+            page: params.page,
+            limit: params.limit,
             total,
-            page,
-            limit,
-            totalPages,
-            hasNext: page < totalPages,
-            hasPrev: page > 1
+            totalPages: Math.ceil(total / params.limit)
          }
       })
+
    } catch (err) {
       console.log("[getJobs]", err);
+      if(err instanceof Error && err.name === "ZodError"){
+         return res.status(400).json({ message: "Invalid query parameters", errors: err });
+      }
       res.status(500).json({ message: "Internal server error" });
    }
 };

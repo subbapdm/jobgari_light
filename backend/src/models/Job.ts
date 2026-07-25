@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { EDUCATION_LEVELS, EXPERIENCE_LEVELS, JOB_STATUSES, JOB_TYPES, SALARY_CURRENCIES, SALARY_PERIODS, WORK_MODES } from "../constants/jobEnums";
 
 const jobSchema = new mongoose.Schema({
    user: {
@@ -39,29 +40,29 @@ const jobSchema = new mongoose.Schema({
    },
    jobType: {
       type: String,
-      enum: ["full-time", "part-time", "contract", "internship"],
+      enum: JOB_TYPES,
       required: true
    },
    workMode: {
       type: String,
-      enum: ["remote", "onsite", "hybrid"],
+      enum: WORK_MODES,
       required: true
    },
    salary: {
       min: { type: Number, default: null },
       max: { type: Number, default: null },
-      currency: { type: String, enum: ["USD", "EUR", "GBP"], default: "USD" },
-      period: { type: String, enum: ["hourly", "monthly", "annually"], default: "monthly"},
+      currency: { type: String, enum: SALARY_CURRENCIES, default: "USD" },
+      period: { type: String, enum: SALARY_PERIODS, default: "monthly"},
       undisclosed: { type: Boolean, default: false }
    },
    experience: {
       type: String,
-      enum: ["entry", "junior", "mid", "senior", "lead", "executive"],
+      enum: EXPERIENCE_LEVELS,
       required: true
    },
    education: {
       type: String,
-      enum: ["high-school", "bachelor", "master", "phd", "none"]
+      enum: EDUCATION_LEVELS
    },
    skills: [
       {
@@ -71,7 +72,7 @@ const jobSchema = new mongoose.Schema({
    ],
    status: {
       type: String,
-      enum: ["draft", "active", "expired"],
+      enum: JOB_STATUSES,
       default: "active"
    },
    isFeatured: {

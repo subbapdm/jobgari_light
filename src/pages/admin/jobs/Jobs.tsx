@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { useJobFilters } from "@/hooks/useJobFilters";
 import { jobsService } from "@/services/jobService";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -22,7 +23,7 @@ import {
   Trash,
   Trash2,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const STATUS_OPTIONS = [
@@ -41,16 +42,23 @@ const TYPE_OPTIONS = [
 ];
 
 const Jobs = () => {
-  const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("");
-  const [jobType, setJobType] = useState("");
+  const { filters, setFilter } = useJobFilters();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [searchInput, setSearchInput] = useState(filters.search);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setFilter({ search: searchInput });
+    }, 400);
+
+    return () => clearTimeout(timeout);
+  }, [searchInput]);
 
   const navigate = useNavigate();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["jobs"],
-    queryFn: () => jobsService.getJobs(),
+    queryKey: ["jobs", filters],
+    queryFn: () => jobsService.getJobs(filters),
     select: (res) => ({
       jobs: res.data,
       pagination: res.pagination,
@@ -61,8 +69,7 @@ const Jobs = () => {
     return null;
   }
 
-  const selectedAll =
-    data?.jobs.length > 0 && data?.jobs.length === selectedItems.length;
+  const selectedAll = data?.jobs.length > 0 && data?.jobs.length === selectedItems.length;
 
   const selectAll = () => {
     if (selectedAll) {
@@ -80,13 +87,6 @@ const Jobs = () => {
     }
   };
 
-  const handleTypeChange = (val: string) => {
-    setJobType(val);
-  };
-
-  const handleStatusChange = (val: string) => {
-    setStatus(val);
-  };
 
   return (
     <div className="space-y-4">
@@ -109,16 +109,16 @@ const Jobs = () => {
       <div className="flex flex-col lg:flex-row items-stretch sm:items-center gap-3">
         <div className="flex w-full lg:w-1/3  gap-3">
           <FormSelect
-            value={jobType}
-            onChange={handleTypeChange}
+            value={filters.jobType || "all"}
+            onChange={(val) => setFilter({ jobType: val })}
             options={TYPE_OPTIONS}
             label="Types"
             placeholder="All Types"
             className="w-full min-h-11 rounded-sm bg-white"
           />
           <FormSelect
-            value={status}
-            onChange={handleStatusChange}
+            value={filters.status || "all"}
+            onChange={(val) => setFilter({ status: val })}
             options={STATUS_OPTIONS}
             label="Status"
             placeholder="All Statuses"
@@ -130,8 +130,8 @@ const Jobs = () => {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
             <Input
               placeholder="Search Jobs..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
               className="w-full pl-9 min-h-11 rounded-sm bg-white focus-visible:border focus-visible:border-teal-400 focus-visible:ring-1 focus-visible:ring-teal-400"
             />
           </div>
