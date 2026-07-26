@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { useJobFilters } from "@/hooks/useJobFilters";
+import { useJobFilters, type JobFilters } from "@/hooks/useJobFilters";
 import { jobsService } from "@/services/jobService";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -41,6 +41,16 @@ const TYPE_OPTIONS = [
   { value: "part-time", label: "Part-time" },
   { value: "contract", label: "Contract" },
   { value: "internship", label: "Internship" },
+];
+
+const FILTER_KEYS: (keyof JobFilters)[] = [
+  "experience",
+  "workMode",
+  "education",
+  "salaryMin",
+  "salaryMax",
+  "isFeatured",
+  "isUrgent"
 ];
 
 const Jobs = () => {
@@ -88,6 +98,7 @@ const Jobs = () => {
     setSelectedItems(prev => prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]);
   };
 
+  const ActiveFiltersCount = FILTER_KEYS.filter(key => filters[key]).length;
 
   return (
     <div className="space-y-4">
@@ -140,7 +151,7 @@ const Jobs = () => {
             <AdvanceFilterDropdown
               filters={filters}
               setFilter={setFilter}
-              activeCount={4}
+              activeCount={ActiveFiltersCount}
             />
             <Button
               variant="outline"
@@ -212,85 +223,106 @@ const Jobs = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-dashed divide-gray-200">
-            {data?.jobs.map((job) => (
-              <tr key={job._id} className="hover:bg-gray-50 transition-colors">
-                <td className="p-4">
-                  <Checkbox
-                    checked={selectedItems.includes(job._id)}
-                    onCheckedChange={() => handleSelect(job._id)}
-                    className="size-5 data-[state=checked]:bg-teal-500 data-[state=checked]:border-teal-500"
-                  />
-                </td>
-                <td className="px-4 py-3 font-medium text-gray-800 w-px whitespace-nowrap">
-                  <div className="flex items-center gap-3">
-                    <div className="size-10 bg-slate-200 flex items-center justify-center text-lg font-bold text-slate-300 rounded-full p-0.5 shrink-0">
-                      {job.company.logo ? <img src="" /> : <span>LG</span>}
-                    </div>
-                    <div className="flex flex-col">
-                      <strong className="text-[0.9rem]">{job.title}</strong>
-                      <span className="text-[0.7rem] text-gray-400">
-                        {job.category.name}
-                      </span>
-                    </div>
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-gray-500">
-                  <strong className="text-[0.9rem] font-semibold text-slate-600">
-                    {job.company.name}
-                  </strong>
-                </td>
-                <td className="px-4 py-3 text-[0.8rem] font-medium text-gray-400 capitalize hidden md:table-cell">
-                  {job.jobType}
-                </td>
-                <td className="px-4 py-3">
-                  {job.status === "active" ? (
-                    <Badge className="min-h-6 px-2.5 bg-teal-100 text-teal-600">
-                      {job.status}
-                    </Badge>
-                  ) : (
-                    <Badge className="min-h-6 px-2.5 bg-slate-100 text-slate-500">
-                      {job.status}
-                    </Badge>
-                  )}
-                </td>
-                <td className="px-4 py-3 text-gray-500">
-                  <Badge className="min-h-6 bg-slate-100 text-slate-500 font-semibold">
-                    443
-                  </Badge>
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-500">
-                  {new Date(Date.now()).toLocaleDateString()}
-                </td>
-                <td className="px-4 py-3 font-medium text-gray-800">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="size-8 cursor-pointer text-gray-400"
-                      >
-                        <MoreHorizontalIcon />
-                        <span className="sr-only">Open menu</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => {}}>
-                        <Eye size={13} />
-                        View Profile
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        variant="destructive"
-                        onClick={() => {}}
-                      >
-                        <Trash size={13} />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+            {isLoading ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <tr key={i} className="animate-pulse">
+                  <td className="p-4"><div className="size-5 bg-slate-200 rounded" /></td>
+                  <td className="p-4"><div className="h-8 w-48 bg-slate-200 rounded" /></td>
+                  <td className="p-4"><div className="h-5 w-24 bg-slate-200 rounded" /></td>
+                  <td className="p-4 hidden md:table-cell"><div className="h-5 w-16 bg-slate-200 rounded-full" /></td>
+                  <td className="p-4"><div className="h-6 w-16 bg-slate-200 rounded-full" /></td>
+                  <td className="p-4"><div className="h-5 w-12 bg-slate-200 rounded" /></td>
+                  <td className="p-4"><div className="h-5 w-20 bg-slate-200 rounded" /></td>
+                  <td className="p-4"><div className="size-8 bg-slate-200 rounded" /></td>
+                </tr>
+              ))
+            ) : jobs.length === 0 ? (
+              <tr>
+                <td colSpan={8} className="text-sm text-center py-12 text-slate-400">
+                  No jobs found matching your criteria.
                 </td>
               </tr>
-            ))}
+            ) : (
+              jobs.map((job) => (
+                <tr key={job._id} className="hover:bg-gray-50 transition-colors">
+                  <td className="p-4">
+                    <Checkbox
+                      checked={selectedItems.includes(job._id)}
+                      onCheckedChange={() => handleSelect(job._id)}
+                      className="size-5 data-[state=checked]:bg-teal-500 data-[state=checked]:border-teal-500"
+                    />
+                  </td>
+                  <td className="px-4 py-3 font-medium text-gray-800 w-px whitespace-nowrap">
+                    <div className="flex items-center gap-3">
+                      <div className="size-10 bg-slate-200 flex items-center justify-center text-lg font-bold text-slate-300 rounded-full p-0.5 shrink-0">
+                        {job.company.logo ? <img src="" /> : <span>LG</span>}
+                      </div>
+                      <div className="flex flex-col">
+                        <strong className="text-[0.9rem]">{job.title}</strong>
+                        <span className="text-[0.7rem] text-gray-400">
+                          {job.category.name}
+                        </span>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-gray-500">
+                    <strong className="text-[0.9rem] font-semibold text-slate-600">
+                      {job.company.name}
+                    </strong>
+                  </td>
+                  <td className="px-4 py-3 text-[0.8rem] font-medium text-gray-400 capitalize hidden md:table-cell">
+                    {job.jobType}
+                  </td>
+                  <td className="px-4 py-3">
+                    {job.status === "active" ? (
+                      <Badge className="min-h-6 px-2.5 bg-teal-100 text-teal-600">
+                        {job.status}
+                      </Badge>
+                    ) : (
+                      <Badge className="min-h-6 px-2.5 bg-slate-100 text-slate-500">
+                        {job.status}
+                      </Badge>
+                    )}
+                  </td>
+                  <td className="px-4 py-3 text-gray-500">
+                    <Badge className="min-h-6 bg-slate-100 text-slate-500 font-semibold">
+                      443
+                    </Badge>
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-500">
+                    {new Date(Date.now()).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-3 font-medium text-gray-800">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="size-8 cursor-pointer text-gray-400"
+                        >
+                          <MoreHorizontalIcon />
+                          <span className="sr-only">Open menu</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => {}}>
+                          <Eye size={13} />
+                          View Profile
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          variant="destructive"
+                          onClick={() => {}}
+                        >
+                          <Trash size={13} />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
         
