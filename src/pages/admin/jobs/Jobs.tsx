@@ -1,4 +1,5 @@
 import FormSelect from "@/components/form/FormSelect";
+import AdvanceFilterDropdown from "@/components/jobs/AdvanceFilterDropdown";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -42,7 +43,7 @@ const TYPE_OPTIONS = [
 ];
 
 const Jobs = () => {
-  const { filters, setFilter } = useJobFilters();
+  const { filters, setFilter, clearFilter, clearAllFilters } = useJobFilters();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [searchInput, setSearchInput] = useState(filters.search);
 
@@ -135,10 +136,15 @@ const Jobs = () => {
               className="w-full pl-9 min-h-11 rounded-sm bg-white focus-visible:border focus-visible:border-teal-400 focus-visible:ring-1 focus-visible:ring-teal-400"
             />
           </div>
-          <div className="">
+          <div className="flex items-center gap-3">
+            <AdvanceFilterDropdown
+              filters={filters}
+              setFilter={setFilter}
+              activeCount={4}
+            />
             <Button
               variant="outline"
-              className="min-h-11 bg-white cursor-pointer px-4 sm:px-6"
+              className="min-h-11 bg-white rounded-sm cursor-pointer px-4 sm:px-6"
             >
               <Download className="size-4" />
               <span className="hidden sm:block">Download</span>
