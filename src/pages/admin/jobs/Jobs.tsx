@@ -1,4 +1,5 @@
 import FormSelect from "@/components/form/FormSelect";
+import ActiveTags from "@/components/jobs/ActiveTags";
 import AdvanceFilterDropdown from "@/components/jobs/AdvanceFilterDropdown";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -46,46 +47,45 @@ const Jobs = () => {
   const { filters, setFilter, clearFilter, clearAllFilters } = useJobFilters();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [searchInput, setSearchInput] = useState(filters.search);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setSearchInput(filters.search);
+  }, [filters.search]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setFilter({ search: searchInput });
+      if(searchInput !== filters.search){
+        setFilter({ search: searchInput });
+      }
     }, 400);
 
     return () => clearTimeout(timeout);
   }, [searchInput]);
 
-  const navigate = useNavigate();
 
   const { data, isLoading } = useQuery({
     queryKey: ["jobs", filters],
     queryFn: () => jobsService.getJobs(filters),
     select: (res) => ({
-      jobs: res.data,
+      jobs: res.data ?? [],
       pagination: res.pagination,
     }),
   });
 
-  if (!data) {
-    return null;
-  }
-
-  const selectedAll = data?.jobs.length > 0 && data?.jobs.length === selectedItems.length;
+  const jobs = data?.jobs ?? [];
+  const selectedAll = jobs.length > 0 && jobs.length === selectedItems.length;
 
   const selectAll = () => {
     if (selectedAll) {
       setSelectedItems([]);
     } else {
-      setSelectedItems(data?.jobs.map((job) => job._id));
+      setSelectedItems(jobs.map((job) => job._id));
     }
   };
 
   const handleSelect = (id: string) => {
-    if (selectedItems.includes(id)) {
-      return setSelectedItems((prev) => prev.filter((item) => item !== id));
-    } else {
-      return setSelectedItems((prev) => [...prev, id]);
-    }
+    setSelectedItems(prev => prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]);
   };
 
 
@@ -152,6 +152,12 @@ const Jobs = () => {
           </div>
         </div>
       </div>
+
+      <ActiveTags
+        filters={filters}
+        clearFilter={clearFilter}
+        clearAllFilters={clearAllFilters}
+      />
 
       <div className="bg-white overflow-x-auto rounded-lg relative">
 
