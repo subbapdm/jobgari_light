@@ -3,7 +3,6 @@ import Job from "../models/Job";
 import type { IUser } from "../models/User";
 import { jobQuerySchema } from "../validators/job";
 import { buildJobFilter } from "../utils/jobFilters";
-import { populate } from "dotenv";
 
 interface AuthRequest extends Request{
    user?: IUser;

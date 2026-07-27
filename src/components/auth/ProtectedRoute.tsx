@@ -1,16 +1,29 @@
 
 import useAuthStore from '@/store/useAuthStore'
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import Loader from '../Loader';
 
-const ProtectedRoute = () => {
-   const { isAuthenticated, loading } = useAuthStore();
+interface ProtectedRouteProps {
+   allowedRoles?: string[];
+}
+
+const ProtectedRoute = ({ allowedRoles }: ProtectedRouteProps) => {
+   const { user, isAuthenticated, loading } = useAuthStore();
+   const location = useLocation();
 
    if(loading){
-      return <Loader />
+      return <Loader />;
+   }
+
+   if(!isAuthenticated){
+      return <Navigate to="/sign-in" state={{ from: location }} replace />;
+   }
+
+   if(allowedRoles && user && !allowedRoles.includes(user.role)){
+      return <Navigate to="/" replace />;
    }
    
-   return isAuthenticated ? <Outlet /> : <Navigate to="/sign-in" />
+   return <Outlet />
 }
 
 export default ProtectedRoute;
