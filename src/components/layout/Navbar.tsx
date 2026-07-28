@@ -13,7 +13,7 @@ const Navbar = () => {
                </div>
                <div className="flex items-center gap-8">
                   <nav>
-                     <ul className="flex items-center gap-6">
+                     <ul className="flex items-center gap-10">
                         <li className="text-sm text-gray-700 font-medium">
                            <Link to="/">Home</Link>
                         </li>
@@ -29,8 +29,8 @@ const Navbar = () => {
                      </ul>
                   </nav>
                   <div className="flex items-center gap-4">
-                     <Link to="/" className={cn(buttonVariants({ variant: "outline", }), "min-h-11 px-4 rounded-md text-sm font-medium")}>Login</Link>
-                     <Link to="/"  className={cn(buttonVariants({ variant: "default", }), "min-h-11 px-4 rounded-md bg-teal-500 text-sm font-medium")}>Register</Link>
+                     <Link to="/sign-in" className={cn(buttonVariants({ variant: "outline", }), "min-h-11 px-4 rounded-md text-sm font-medium")}>Login</Link>
+                     <Link to="/sign-up"  className={cn(buttonVariants({ variant: "default", }), "min-h-11 px-4 rounded-md bg-teal-500 text-sm font-medium")}>Register</Link>
                   </div>
                </div>
             </div>

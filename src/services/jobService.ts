@@ -20,6 +20,7 @@ export interface JobsParams {
    sortBy?: string;
    sortOrder?: string;
    page?: string;
+   limit?: string;
 };
 
 export class JobsService extends ApiClient {

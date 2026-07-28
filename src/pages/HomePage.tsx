@@ -1,17 +1,13 @@
 
-import Container from "@/components/Container";
-import Hero from "@/components/Hero";
-import useAuthStore from "@/store/useAuthStore";
-import { useNavigate } from "react-router-dom";
+import HeroSection from "@/components/HeroSection";
+import JobsSection from "@/components/JobsSection";
 
 
 const HomePage = () => {
-   const navigate = useNavigate();
-   const { user } = useAuthStore();
-
    return (
       <>
-         <Hero />
+         <HeroSection />
+         <JobsSection />
       </>
    )
 }
