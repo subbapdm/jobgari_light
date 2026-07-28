@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 const Navbar = () => {
    return (
-      <div className="bg-white shadow-sm p-4">
+      <div className="bg-white shadow-sm p-4 border-b-2 border-teal-600/50">
          <Container>
             <div className="flex items-center justify-between">
                <div>
@@ -14,23 +14,23 @@ const Navbar = () => {
                <div className="flex items-center gap-8">
                   <nav>
                      <ul className="flex items-center gap-10">
-                        <li className="text-sm text-gray-700 font-medium">
-                           <Link to="/">Home</Link>
+                        <li className="text-sm text-gray-600 font-medium">
+                           <Link to="/">Find Jobs</Link>
                         </li>
-                        <li className="text-sm text-gray-700 font-medium">
+                        <li className="text-sm text-gray-600 font-medium">
                            <Link to="/">About Us</Link>
                         </li>
-                        <li className="text-sm text-gray-700 font-medium">
-                           <Link to="/">Jobs</Link>
+                        <li className="text-sm text-gray-600 font-medium">
+                           <Link to="/">Companies</Link>
                         </li>
-                        <li className="text-sm text-gray-700 font-medium">
+                        <li className="text-sm text-gray-600 font-medium">
                            <Link to="/">Contact Us</Link>
                         </li>
                      </ul>
                   </nav>
                   <div className="flex items-center gap-4">
-                     <Link to="/sign-in" className={cn(buttonVariants({ variant: "outline", }), "min-h-11 px-4 rounded-md text-sm font-medium")}>Login</Link>
-                     <Link to="/sign-up"  className={cn(buttonVariants({ variant: "default", }), "min-h-11 px-4 rounded-md bg-teal-500 text-sm font-medium")}>Register</Link>
+                     <Link to="/sign-in" className={cn(buttonVariants({ variant: "outline", }), "min-h-10 px-4 rounded-md text-sm font-medium text-gray-600")}>Sign In</Link>
+                     <Link to="/sign-up"  className={cn(buttonVariants({ variant: "default", }), "min-h-10 px-4 rounded-md bg-teal-500 text-sm font-medium")}>Post a Job</Link>
                   </div>
                </div>
             </div>
