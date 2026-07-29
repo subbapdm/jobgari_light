@@ -55,8 +55,8 @@ const JobCard = ({ job }: JobCardProps) => {
          </div>
 
          <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[0.8rem]">
-            {job.skills.map(skill => (
-               <span className="flex items-center gap-1 bg-gray-100 py-2 px-2 rounded-sm text-gray-800 font-medium text-xs">
+            {job.skills.map((skill, i) => (
+               <span key={`${skill.toLowerCase()}-${i}`} className="flex items-center gap-1 bg-gray-100 py-2 px-2 rounded-sm text-gray-800 font-medium text-xs">
                   {skill}
                </span>
             ))}
@@ -66,9 +66,12 @@ const JobCard = ({ job }: JobCardProps) => {
          <div className="flex items-center gap-2 mt-8">
             <div>
                {!job.salary.undisclosed && (
-                  <strong className="text-gray-700 text-sm">
-                     {job.salary.currency === "EUR" ? "€" : job.salary.currency === "GBP" ? "£" : "$"}{job.salary.min} - {job.salary.max}
-                  </strong>
+                  <>
+                     <strong className="text-gray-700 text-sm">
+                     {job.salary.currency === "EUR" ? "€" : job.salary.currency === "GBP" ? "£" : "$"}{job.salary.min} - {job.salary.max} 
+                     </strong>
+                     /{job.salary.period}
+                  </>
                )}
                {job.location?.city && (
                   <span className="flex items-center gap-1 text-xs text-gray-400">

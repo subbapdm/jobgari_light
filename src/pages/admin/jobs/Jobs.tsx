@@ -175,7 +175,7 @@ const Jobs = () => {
         <table className="w-full mx-auto">
           <thead className="border-b border-dashed border-gray-200 text-gray-500 text-left text-[0.85rem]">
             <tr>
-              <th className="p-4">
+              <th className="p-4 size-6">
                 <Checkbox
                   checked={selectedAll}
                   onCheckedChange={() => selectAll()}

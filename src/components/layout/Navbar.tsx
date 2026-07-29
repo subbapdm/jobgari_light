@@ -9,22 +9,24 @@ const Navbar = () => {
          <Container>
             <div className="flex items-center justify-between">
                <div>
-                  <img src="/logo.svg" width={150} height={50} />
+                  <Link to="/">
+                     <img src="/logo.svg" width={150} height={50} />
+                  </Link>
                </div>
                <div className="flex items-center gap-8">
                   <nav>
                      <ul className="flex items-center gap-10">
                         <li className="text-sm text-gray-600 font-medium">
-                           <Link to="/">Find Jobs</Link>
+                           <Link to="/jobs">Find Jobs</Link>
                         </li>
                         <li className="text-sm text-gray-600 font-medium">
-                           <Link to="/">About Us</Link>
+                           <Link to="/about">About Us</Link>
                         </li>
                         <li className="text-sm text-gray-600 font-medium">
-                           <Link to="/">Companies</Link>
+                           <Link to="/companies">Companies</Link>
                         </li>
                         <li className="text-sm text-gray-600 font-medium">
-                           <Link to="/">Contact Us</Link>
+                           <Link to="/contact-us">Contact Us</Link>
                         </li>
                      </ul>
                   </nav>

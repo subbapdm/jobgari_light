@@ -19,7 +19,7 @@ interface FormSelectProps{
 const FormSelect = ({ value, onChange, options, placeholder = "Select an option", label, id, disabled, isLoading = false, className }: FormSelectProps) => {
    return (
       <Select onValueChange={onChange} value={value} disabled={disabled}>
-         <SelectTrigger id={id} className={cn("cursor-pointer transition-all outline-none", "focus:border focus:border-teal-400 focus:ring-1 focus:ring-teal-400", className)}>
+         <SelectTrigger id={id} className={cn("cursor-pointer outline-none", "focus:border focus:border-teal-400 focus:ring-1 focus:ring-teal-400", className)}>
             <SelectValue placeholder={isLoading ? "Loading..." : placeholder} />
          </SelectTrigger>
          <SelectContent

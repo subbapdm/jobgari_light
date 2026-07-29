@@ -12,13 +12,15 @@ export function buildJobFilter(params: JobQueryParams): QueryFilter<typeof Job> 
    }
 
    if(params.status) filter.status = params.status;
-   if(params.jobType) filter.jobType = params.jobType;
-   if(params.workMode) filter.workMode = params.workMode;
-   if(params.experience) filter.experience = params.experience;
-   if(params.education) filter.education = params.education;
-   if(params.category) filter.education = params.education;
+
+   if(params.jobType && params.jobType.length) filter.jobType = { $in: params.jobType };
+   if(params.workMode && params.workMode.length) filter.workMode = { $in: params.workMode };
+   if(params.experience && params.experience.length) filter.experience = { $in: params.experience };
+   if(params.education && params.education.length) filter.education = { $in: params.education };
+
+   if(params.category) filter.category = params.category;
    if(params.location) filter.location = params.location;
-   if(params.company) filter.company = params.location;
+   if(params.company) filter.company = params.company;
    if(params.isFeatured !== undefined) filter.isFeatured = params.isFeatured;
    if(params.isUrgent !== undefined) filter.isUrgent = params.isUrgent;
    

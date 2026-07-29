@@ -13,6 +13,7 @@ import PublicRoute from "@/components/auth/PublicRoute";
 import HomePage from "@/pages/HomePage";
 import MainLayout from "@/components/layout/MainLayout";
 import AuthLayout from "@/components/layout/AuthLayout";
+import JobListing from "@/pages/JobListing";
 
 const AppRouter = () => {
 
@@ -21,6 +22,7 @@ const AppRouter = () => {
          {/* Public Routes */}
          <Route element={<MainLayout />}>
             <Route path="/" element={<HomePage />} />
+            <Route path="/jobs" element={<JobListing />} />
          </Route>
          
          {/* Auth Routes */}
