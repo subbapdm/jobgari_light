@@ -4,19 +4,20 @@ import type { ApiResponse } from "@/types/api.types";
 import type { Job } from "@/types/job.types";
 
 export interface JobsParams {
-   search?: string;
+   keyword?: string;
    status?: string;
-   jobType?: string;
-   workMode?: string;
-   experience?: string;
-   education?: string;
+   jobType?: string[];
+   workMode?: string[];
+   experience?: string[];
+   education?: string[];
    category?: string;
    location?: string;
    company?: string;
-   salaryMin?: string;
-   salaryMax?: string;
-   isFeatured?: string;
-   isUrgent?: string;
+   salaryMin?: number | null;
+   salaryMax?: number | null;
+   isFeatured?: boolean | null;
+   isUrgent?: boolean | null;
+
    sortBy?: string;
    sortOrder?: string;
    page?: string;
@@ -31,10 +32,17 @@ export class JobsService extends ApiClient {
       const query = new URLSearchParams();
 
       Object.entries(params).forEach(([key, val]) => {
-         if(val !== undefined && val !== "") query.append(key, String(val))
+         if(val === undefined || val === null || val === "") return;
+
+         if(Array.isArray(val)){
+            if(val.length > 0) query.append(key, val.join(","));
+         } else {
+            query.append(key, String(val));
+         }
       });
 
       const qs = query.toString();
+
       return this.request(`/jobs${qs ? `?${qs}` : ""}`);
    }
 

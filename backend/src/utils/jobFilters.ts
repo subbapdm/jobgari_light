@@ -7,8 +7,8 @@ type JobQueryParams = ReturnType<typeof jobQuerySchema.parse>;
 export function buildJobFilter(params: JobQueryParams): QueryFilter<typeof Job> {
    const filter: QueryFilter<typeof Job> = {};
 
-   if(params.search){
-      filter.$text = { $search: params.search };
+   if(params.keyword){
+      filter.$text = { $search: params.keyword };
    }
 
    if(params.status) filter.status = params.status;
@@ -21,13 +21,15 @@ export function buildJobFilter(params: JobQueryParams): QueryFilter<typeof Job> 
    if(params.category) filter.category = params.category;
    if(params.location) filter.location = params.location;
    if(params.company) filter.company = params.company;
+   
    if(params.isFeatured !== undefined) filter.isFeatured = params.isFeatured;
    if(params.isUrgent !== undefined) filter.isUrgent = params.isUrgent;
    
-   if(params.salaryMin !== undefined || params.salaryMax !== undefined){
-      filter["salary.min"] = {};
-      if(params.salaryMin !== undefined) filter["salary.min"].$gte = params.salaryMin;
-      if(params.salaryMax !== undefined) filter["salary.max"].$gte = params.salaryMax
+   if(params.salaryMin !== undefined){
+      filter["salary.min"] = { $gte: params.salaryMin };
+   }
+   if(params.salaryMax !== undefined){
+      filter["salary.max"] = { $lte: params.salaryMax };
    }
 
    return filter;

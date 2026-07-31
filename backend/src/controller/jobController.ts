@@ -9,8 +9,10 @@ interface AuthRequest extends Request{
 }
 
 export const getJobs = async (req: Request, res: Response) => {
+
    try {
       const params = jobQuerySchema.parse(req.query);
+
       const filter = buildJobFilter(params);
 
       const skip = (params.page - 1) * params.limit;

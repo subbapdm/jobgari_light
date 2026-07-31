@@ -1,8 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 
-const MULTI_VALUES_KEYS = ["jobType", "workMode", "experience", "education"] as const;
-
 export interface JobFilters {
    search: string;
    status: string;
@@ -89,27 +87,6 @@ export function useJobFilters(){
       setSearchParams(new URLSearchParams());
    }, [setSearchParams]);
 
-   const toggleMultiValue = useCallback((key: (typeof MULTI_VALUES_KEYS)[number], value: string) => {
-      setSearchParams(prev => {
-         const next = new URLSearchParams(prev);
-         const current = next.get(key)?.split(",").filter(Boolean) ?? [];
 
-         const updated = current.includes(value) ? current.filter((v) => v !== value) : [...current, value];
-
-         if(updated.length === 0){
-            next.delete(key);
-         } else {
-            next.set(key, updated.join(","));
-         }
-
-         next.set("page", "1");
-         return next;
-      })
-   }, [setSearchParams]);
-
-   const isMultiValueSelected = useCallback((key: (typeof MULTI_VALUES_KEYS)[number], value: string) => {
-      return filters[key].split(",").map(s => s.trim()).filter(Boolean).includes(value);
-   }, [filters]);
-
-   return { filters, setFilter, clearFilter, clearAllFilters, toggleMultiValue, isMultiValueSelected };
+   return { filters, setFilter, clearFilter, clearAllFilters };
 }
