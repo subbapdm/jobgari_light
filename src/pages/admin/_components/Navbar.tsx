@@ -1,6 +1,7 @@
 import { ChevronLeft, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import useAuthStore from "@/store/useAuthStore";
 
 interface NavbarProps {
    handleToggle: () => void;
@@ -10,10 +11,7 @@ interface NavbarProps {
 const Navbar = ({ handleToggle, isCollapsed }: NavbarProps) => {
    const [dropdownOpen, setDropdownOpen] = useState(false);
 
-   const user = {
-      name: "subbapdm",
-      email: "subbapdm@gmail.com"
-   }
+   const {user} = useAuthStore();
    
    return (
       <header className="bg-white flex items-center justify-between min-h-14 border-b border-slate-100 px-5">

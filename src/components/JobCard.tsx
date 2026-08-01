@@ -21,7 +21,7 @@ const JobCard = ({ job, saved = false, compact = false }: JobCardProps) => {
    const salary = formatSalary(job.salary);
 
    return (
-      <div className="group relative flex flex-col gap-4 rounded-xl border border-slate-100 bg-white p-5 transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_rgba(15, 118, 110, 0.18)] focus-within:ring-2 focus-within:ring-teal-500/40">
+      <div className="group relative flex flex-col gap-4 rounded-xl border border-slate-100 bg-white p-5 transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_rgba(15, 118, 110, 0.18)]">
       
          <Link to={`/jobs/${job.slug}`} aria-label={`View ${job.title} at ${job.company?.name}`} className="absolute inset-0 z-0 rounded-xl" />
             
@@ -98,7 +98,7 @@ const JobCard = ({ job, saved = false, compact = false }: JobCardProps) => {
                Urgent
             </span>
          )}
-         
+
       </div>
    )
 }

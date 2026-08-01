@@ -9,6 +9,10 @@ interface AuthState {
    user: User | null;
    loading: boolean;
    isAuthenticated: boolean;
+   hasHydrated: boolean;
+   setHasHydrated: (value: boolean) => void;
+
+   authInitialized: boolean;
 
    signUp: (data: SignUpData) => Promise<void>;
    signIn: (data: SignInData) => Promise<void>;
@@ -22,6 +26,10 @@ const useAuthStore = create<AuthState>()(
          user: null,
          loading: false,
          isAuthenticated: false,
+         hasHydrated: false,
+         authInitialized: false,
+
+         setHasHydrated: (value: boolean) => set({ hasHydrated: value }),
 
          signUp: async (data: SignUpData) => {
             set({ loading: true });
@@ -69,7 +77,7 @@ const useAuthStore = create<AuthState>()(
                   isAuthenticated: false
                });
             } finally {
-               set({ loading: false });
+               set({ loading: false, authInitialized: true });
             }
          },
          logout: async () => {
@@ -99,6 +107,7 @@ const useAuthStore = create<AuthState>()(
          onRehydrateStorage: () => (state) => {
             if(state){
                // Automatically check auth after rehydration
+               state.setHasHydrated(true);
                state.authCheck();
             }
          }
