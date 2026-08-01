@@ -38,6 +38,8 @@ const EXCLUDED_KEYS: (keyof AdminJobFilters)[] = [
 const ActiveTags = ({ filters, clearFilter, clearAllFilters }: ActiveTagsProps) => {
    const activeTags = (Object.keys(filters) as (keyof AdminJobFilters)[]).filter(key => filters[key] && !EXCLUDED_KEYS.includes(key));
 
+   if(activeTags.length <= 0) return null;
+
    return (
       <div className="flex flex-wrap items-center gap-2">
          <span className="text-xs font-medium text-slate-400">Active filters</span>

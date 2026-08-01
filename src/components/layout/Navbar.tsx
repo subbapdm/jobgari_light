@@ -56,6 +56,7 @@ const Navbar = ({ user, isAuthenticated, ready}: { user: UserType; isAuthenticat
                               <div className="flex flex-col space-y-2">
                                  <p className="text-sm text-gray-700">{user?.name}</p>
                                  <p className="text-sm text-gray-700">{user?.email}</p>
+                                 <Link to="/admin" className="text-sm text-gray-700">Dashboard</Link>
                               </div>
                            </div>
                         )}
