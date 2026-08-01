@@ -1,49 +1,12 @@
 import Container from '@/components/Container';
+import JobCard from '@/components/JobCard';
 import FiltersSidebar from '@/components/jobs/FiltersSidebar';
+import { PUBLIC_DEFAULT_FILTERS, type PublicJobFilters } from '@/schemas/jobFilterSchema';
 import { jobsService } from '@/services/jobService';
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-export interface FilterState{
-   keyword: string;
-   location: string;
-   status: string;
-   jobType: string[];
-   workMode: string[];
-   experience: string[];
-   education: string[];
-   category: string;
-   company: string;
-   salaryMin: number | null;
-   salaryMax: number | null;
-   isFeatured: boolean | null;
-   isUrgent: boolean | null;
-
-   sortBy: string;
-   sortOrder: string;
-   page: string;
-};
-
-export const INITIAL_FILTERS: FilterState = {
-   keyword: "",
-   location: "",
-   status: "",
-   jobType: [],
-   workMode: [],
-   experience: [],
-   education: [],
-   category: "",
-   company: "",
-   salaryMin: null,
-   salaryMax: null,
-   isFeatured: null,
-   isUrgent: null,
-
-   sortBy: "createdAt",
-   sortOrder: "desc",
-   page: "1"
-};
 
 const getArrayParam = (paramValue: string | null): string[] => {
    if(!paramValue) return [];
@@ -53,42 +16,42 @@ const getArrayParam = (paramValue: string | null): string[] => {
 const JobListing = () => {
    const [ searchParams, setSearchParams ] = useSearchParams();
 
-   const filters: FilterState = useMemo(() => {
+   // Simplified version of useJobFilters hook
+   const filters: PublicJobFilters = useMemo(() => {
       return {
-         keyword: searchParams.get("keyword") ?? INITIAL_FILTERS.keyword,
-         location: searchParams.get("location") ?? INITIAL_FILTERS.location,
-         status: searchParams.get("status") ?? INITIAL_FILTERS.status,
+         keyword: searchParams.get("keyword") ?? PUBLIC_DEFAULT_FILTERS.keyword,
+         location: searchParams.get("location") ?? PUBLIC_DEFAULT_FILTERS.location,
+         status: "active",
 
          jobType: getArrayParam(searchParams.get("jobType")),
          workMode: getArrayParam(searchParams.get("workMode")),
          experience: getArrayParam(searchParams.get("experience")),
          education: getArrayParam(searchParams.get("education")),
 
-         category: searchParams.get("category") ?? INITIAL_FILTERS.category,
-         company: searchParams.get("company") ?? INITIAL_FILTERS.company,
+         category: searchParams.get("category") ?? PUBLIC_DEFAULT_FILTERS.category,
+         company: searchParams.get("company") ?? PUBLIC_DEFAULT_FILTERS.company,
          salaryMin: searchParams.get("salaryMin") ? Number(searchParams.get("salaryMin")) : null,
          salaryMax: searchParams.get("salaryMax") ? Number(searchParams.get("salaryMax")) : null,
-         isFeatured: searchParams.get("isFeatured") === "true",
-         isUrgent: searchParams.get("isUrgent") === "true",
+         isUrgent: searchParams.get("isUrgent") === "true" ? true : null,
 
-         sortBy: searchParams.get("sortBy") ?? INITIAL_FILTERS.sortBy,
-         sortOrder: searchParams.get("sortOrder") ?? INITIAL_FILTERS.sortOrder,
-         page: searchParams.get("page") ?? INITIAL_FILTERS.page
+         sortBy: searchParams.get("sortBy") ?? PUBLIC_DEFAULT_FILTERS.sortBy,
+         sortOrder: searchParams.get("sortOrder") ?? PUBLIC_DEFAULT_FILTERS.sortOrder,
+         page: searchParams.get("page") ?? PUBLIC_DEFAULT_FILTERS.page
       };
    }, [searchParams]);
 
-   const setFilters = useCallback((newFilters: Partial<FilterState>) => {
+   const setFilters = useCallback((newFilters: Partial<PublicJobFilters>) => {
       const merged = { ...filters, ...newFilters };
 
       if(!('page' in newFilters)){
-         merged.page = INITIAL_FILTERS.page;
+         merged.page = PUBLIC_DEFAULT_FILTERS.page;
       }
 
       const params = new URLSearchParams();
 
-      (Object.keys(merged) as Array<keyof FilterState>).forEach((key) => {
+      (Object.keys(merged) as Array<keyof PublicJobFilters>).forEach((key) => {
          const value = merged[key];
-         const defaultValue = INITIAL_FILTERS[key];
+         const defaultValue = PUBLIC_DEFAULT_FILTERS[key];
 
          if(value === null || value === undefined) return;
 
@@ -111,11 +74,13 @@ const JobListing = () => {
    }, [setSearchParams]);
 
 
-   const { data } = useQuery({
+   const { data, } = useQuery({
       queryKey: ["jobs", filters],
       queryFn: () => jobsService.getJobs(filters),
       staleTime: 60 * 1000
    });
+
+   const jobs = data?.data ?? [];
 
    return (
       <Container>
@@ -128,6 +93,11 @@ const JobListing = () => {
             <div className='flex-1 bg-white p-4'>
                <div>
                   <p className='text-sm text-gray-400'>223 total results found</p>
+               </div>
+               <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+                  {jobs.map((job) => (
+                     <JobCard job={job} />
+                  ))}
                </div>
             </div>
          </div>

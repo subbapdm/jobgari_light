@@ -1,28 +1,31 @@
-import type { JobFilters } from "@/hooks/useJobFilters";
+
 import { Badge } from "../ui/badge";
 import { X } from "lucide-react";
 import { Button } from "../ui/button";
+import type { AdminJobFilters } from "@/schemas/jobFilterSchema";
 
 interface ActiveTagsProps{
-   filters: JobFilters;
-   clearFilter: (key: keyof JobFilters) => void;
+   filters: AdminJobFilters;
+   clearFilter: (key: keyof AdminJobFilters) => void;
    clearAllFilters: () => void;
 };
 
-const FILTER_CONFIG: Partial<Record<keyof JobFilters, { label: string; formatValue?: (val: string) => string}>> = {
-   search: { label: "Search" },
-   status: { label: "Status", formatValue: (v) => v.charAt(0).toUpperCase() + v.slice(1) },
-   jobType: { label: "Type", formatValue: (v) => v.charAt(0).toUpperCase() + v.slice(1) },
-   workMode: { label: "Work Mode", formatValue: (v) => v.charAt(0).toUpperCase() + v.slice(1) },
-   experience: { label: "Experience", formatValue: (v) => v.charAt(0).toUpperCase() + v.slice(1) },
-   education: { label: "Education", formatValue: (v) => v.charAt(0).toUpperCase() + v.slice(1) },
+type FilterValue = AdminJobFilters[keyof AdminJobFilters];
+
+const FILTER_CONFIG: Partial<Record<keyof AdminJobFilters, { label: string; formatValue?: (val: NonNullable<FilterValue>) => string}>> = {
+   keyword: { label: "Keyword" },
+   status: { label: "Status", formatValue: (v) => String(v).charAt(0).toUpperCase() + String(v).slice(1) },
+   jobType: { label: "Type", formatValue: (v) => String(v).charAt(0).toUpperCase() + String(v).slice(1) },
+   workMode: { label: "Work Mode", formatValue: (v) => String(v).charAt(0).toUpperCase() + String(v).slice(1) },
+   experience: { label: "Experience", formatValue: (v) => String(v).charAt(0).toUpperCase() + String(v).slice(1) },
+   education: { label: "Education", formatValue: (v) => String(v).charAt(0).toUpperCase() + String(v).slice(1) },
    salaryMin: { label: "Min Salary", formatValue: (v) => `$${Number(v).toLocaleString()}` },
    salaryMax: { label: "Max Salary", formatValue: (v) => `$${Number(v).toLocaleString()}` },
    isFeatured: { label: "Featured", formatValue: () => "Yes" },
    isUrgent: { label: "Urgent", formatValue: () => "Yes" }
 };
 
-const EXCLUDED_KEYS: (keyof JobFilters)[] = [
+const EXCLUDED_KEYS: (keyof AdminJobFilters)[] = [
    "page",
    "sortBy",
    "sortOrder",
@@ -33,7 +36,7 @@ const EXCLUDED_KEYS: (keyof JobFilters)[] = [
 
 
 const ActiveTags = ({ filters, clearFilter, clearAllFilters }: ActiveTagsProps) => {
-   const activeTags = (Object.keys(filters) as (keyof JobFilters)[]).filter(key => filters[key] && !EXCLUDED_KEYS.includes(key));
+   const activeTags = (Object.keys(filters) as (keyof AdminJobFilters)[]).filter(key => filters[key] && !EXCLUDED_KEYS.includes(key));
 
    return (
       <div className="flex flex-wrap items-center gap-2">
@@ -41,8 +44,11 @@ const ActiveTags = ({ filters, clearFilter, clearAllFilters }: ActiveTagsProps) 
          {activeTags.map((key) => {
             const config = FILTER_CONFIG[key];
             const label = config?.label || key;
-            const rawValue = filters[key]
-            const displayValue = config?.formatValue ? config.formatValue(rawValue) : rawValue;
+            const rawValue = filters[key];
+
+            if(rawValue === null || rawValue === undefined) return null;
+
+            const displayValue = config?.formatValue ? config.formatValue(rawValue) : String(rawValue);
 
             return(
                <Badge key={key} className="min-h-7 pl-2.5 pr-1 bg-teal-50 text-teal-700 border border-teal-200/80 font-normal flex items-center gap-1.5 rounded-md hover:bg-teal-100 transition-colors">

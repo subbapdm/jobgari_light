@@ -7,13 +7,13 @@ import { useCallback, useMemo, useState } from "react";
 import CheckboxGroup from "../form/CheckboxGroup";
 import { JOB_TYPES } from "@/constants/jobEnums";
 import { Input } from "../ui/input";
-import type { FilterState } from "@/pages/JobListing";
+import type { PublicJobFilters } from "@/schemas/jobFilterSchema";
 
 
 
 interface FiltersSidebarProps{
-   filters: FilterState;
-   onChange: (filters: Partial<FilterState>) => void;
+   filters: PublicJobFilters;
+   onChange: (filters: Partial<PublicJobFilters>) => void;
    onClear: () => void;
 }
 
@@ -41,8 +41,8 @@ const FiltersSidebar = ({ filters, onChange, onClear }: FiltersSidebarProps) => 
 
    const handleApplySalary = useCallback(() => {
       onChange({
-         salaryMin: salary.min ? Number(salary.min) : null,
-         salaryMax: salary.max ? Number(salary.max) : null
+         salaryMin: salary.min ? salary.min : null,
+         salaryMax: salary.max ? salary.max : null
       })
    }, [salary, onChange]);
 

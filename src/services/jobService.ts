@@ -6,10 +6,10 @@ import type { Job } from "@/types/job.types";
 export interface JobsParams {
    keyword?: string;
    status?: string;
-   jobType?: string[];
-   workMode?: string[];
-   experience?: string[];
-   education?: string[];
+   jobType?: string | string[];
+   workMode?: string | string[];
+   experience?: string | string[];
+   education?: string | string[];
    category?: string;
    location?: string;
    company?: string;

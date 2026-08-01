@@ -33,7 +33,7 @@ const DashboardLayout = () => {
   return (
     <div className="min-h-screen flex bg-slate-50">
       
-      <aside className={cn("h-screen bg-white border-r border-slate-200 flex flex-col transition-all duration-300", isMobile ? "fixed inset-y-0 left-0 -translate-x-full" : "translate-x-0", (isMobile && isOpen) && "translate-x-0 z-50", isCollapsed ? "w-16" : "w-64")}>
+      <aside className={cn("h-screen sticky top-0 bg-white border-r border-slate-200 flex flex-col transition-all duration-300 shrink-0", isMobile ? "fixed inset-y-0 left-0 -translate-x-full" : "translate-x-0", (isMobile && isOpen) && "translate-x-0 z-50", isCollapsed ? "w-16" : "w-64")}>
         <Sidebar isCollapsed={isCollapsed} />
       </aside>
 

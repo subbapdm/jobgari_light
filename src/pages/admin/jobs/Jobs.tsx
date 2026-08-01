@@ -12,7 +12,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { useJobFilters, type JobFilters } from "@/hooks/useJobFilters";
+import { useJobFilters } from "@/hooks/useJobFilters";
+import type { AdminJobFilters } from "@/schemas/jobFilterSchema";
 import { jobsService } from "@/services/jobService";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -43,7 +44,7 @@ const TYPE_OPTIONS = [
   { value: "internship", label: "Internship" },
 ];
 
-const FILTER_KEYS: (keyof JobFilters)[] = [
+const FILTER_KEYS: (keyof AdminJobFilters)[] = [
   "experience",
   "workMode",
   "education",
@@ -56,17 +57,17 @@ const FILTER_KEYS: (keyof JobFilters)[] = [
 const Jobs = () => {
   const { filters, setFilter, clearFilter, clearAllFilters } = useJobFilters();
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const [searchInput, setSearchInput] = useState(filters.search);
+  const [searchInput, setSearchInput] = useState(filters.keyword);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setSearchInput(filters.search);
-  }, [filters.search]);
+    setSearchInput(filters.keyword);
+  }, [filters.keyword]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if(searchInput !== filters.search){
-        setFilter({ search: searchInput });
+      if(searchInput !== filters.keyword){
+        setFilter({ keyword: searchInput });
       }
     }, 400);
 
@@ -151,6 +152,7 @@ const Jobs = () => {
             <AdvanceFilterDropdown
               filters={filters}
               setFilter={setFilter}
+              clearAllFilters={clearAllFilters}
               activeCount={ActiveFiltersCount}
             />
             <Button

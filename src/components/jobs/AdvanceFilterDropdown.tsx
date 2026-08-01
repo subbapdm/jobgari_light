@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { SlidersHorizontal } from "lucide-react";
 import { Label } from "../ui/label";
 import FormSelect from "../form/FormSelect";
-import type { JobFilters } from "@/hooks/useJobFilters";
 import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
+import type { AdminJobFilters } from "@/schemas/jobFilterSchema";
 
 
 const EXPERIENCE_OPTIONS = [
@@ -36,68 +36,41 @@ const EDUCATION_OPTIONS = [
 ];
 
 interface AdvanceFilterDropdownProps{
-   filters: JobFilters;
-   setFilter: (updates: Partial<JobFilters>) => void;
+   filters: AdminJobFilters;
+   setFilter: (updates: Partial<AdminJobFilters>) => void;
    activeCount: number;
+   clearAllFilters: () => void
 }
 
-const AdvanceFilterDropdown = ({ filters, setFilter, activeCount }: AdvanceFilterDropdownProps) => {
+const AdvanceFilterDropdown = ({ filters, setFilter, activeCount, clearAllFilters }: AdvanceFilterDropdownProps) => {
    const [open, setOpen] = useState(false);
 
-   const [draft, setDraft] = useState({
-      experience: filters.experience,
-      workMode: filters.workMode,
-      education: filters.education,
-      salaryMin: filters.salaryMin,
-      salaryMax: filters.salaryMax,
-      isFeatured: filters.isFeatured === "true",
-      isUrgent: filters.isUrgent === "true"
-   });
+   const [draftFilters, setDraftFilters] = useState<AdminJobFilters>(filters);
 
-   const handleOpenChange = (next: boolean) => {
-      if(next){
-         setDraft({
-            experience: filters.experience,
-            workMode: filters.workMode,
-            education: filters.education,
-            salaryMin: filters.salaryMin,
-            salaryMax: filters.salaryMax,
-            isFeatured: filters.isFeatured === "true",
-            isUrgent: filters.isUrgent === "true"
-         });
+   useEffect(() => {
+      if(open){
+         setDraftFilters(filters);
       }
-      setOpen(next);
-   };
+   }, [filters, open]);
+
+   const updateDraft = (updates: Partial<AdminJobFilters>) => {
+      setDraftFilters(prev => ({ ...prev, ...updates }));
+   }
 
    const handleApply = () => {
-      setFilter({
-         experience: draft.experience,
-         education: draft.education,
-         workMode: draft.workMode,
-         salaryMin: draft.salaryMin,
-         salaryMax: draft.salaryMax,
-         isFeatured: draft.isFeatured ? "true" : "",
-         isUrgent: draft.isUrgent ? "true" : ""
-      });
+      setFilter(draftFilters);
       setOpen(false);
-   };
+   }
 
    const handleReset = () => {
-      setDraft({
-         experience: "",
-         education: "",
-         workMode: "",
-         salaryMin: "",
-         salaryMax: "",
-         isFeatured: false,
-         isUrgent: false
-      });
-   };
+      clearAllFilters();
+      setOpen(false);
+   }
 
    return (
-      <Popover open={open} onOpenChange={handleOpenChange}>
+      <Popover open={open}>
          <PopoverTrigger asChild>
-            <Button variant="outline" className="min-h-11 bg-white rounded-sm cursor-pointer px-4 relative">
+            <Button onClick={() => setOpen(prev => !prev)} variant="outline" className="min-h-11 bg-white rounded-sm cursor-pointer px-4 relative">
                <SlidersHorizontal className="size-4" />
                {activeCount > 0 && (
                   <span className="absolute -top-2 -right-2 size-5 flex items-center justify-center rounded-full bg-teal-600 text-white text-[0.7rem] font-semibold">
@@ -111,13 +84,8 @@ const AdvanceFilterDropdown = ({ filters, setFilter, activeCount }: AdvanceFilte
             <div className="space-y-2">
                <Label className="text-[0.8rem] font-semibold text-gray-700">Experience</Label>
                <FormSelect
-                  value={draft.experience || "all"}
-                  onChange={(val) => {
-                     setDraft(prev => ({
-                        ...prev,
-                        experience: val === "all" ? "" : val
-                     }))
-                  }}
+                  value={draftFilters.experience || "all"}
+                  onChange={(val) => updateDraft({ experience: val === "all" ? "" : val })}
                   options={EXPERIENCE_OPTIONS}
                   placeholder="All Experience"
                   className="min-h-10 w-full rounded-sm"
@@ -126,13 +94,8 @@ const AdvanceFilterDropdown = ({ filters, setFilter, activeCount }: AdvanceFilte
             <div className="space-y-2">
                <Label className="text-[0.8rem] font-semibold text-gray-700">Work Mode</Label>
                <FormSelect
-                  value={draft.workMode || "all"}
-                  onChange={(val) => {
-                     setDraft(prev => ({
-                        ...prev,
-                        workMode: val === "all" ? "" : val
-                     }))
-                  }}
+                  value={draftFilters.workMode || "all"}
+                  onChange={(val) => updateDraft({ workMode: val === "all" ? "" : val })}
                   options={WORK_MODE_OPTIONS}
                   placeholder="All Work Modes"
                   className="min-h-10 w-full rounded-sm"
@@ -141,13 +104,8 @@ const AdvanceFilterDropdown = ({ filters, setFilter, activeCount }: AdvanceFilte
             <div className="space-y-2">
                <Label className="text-[0.8rem] font-semibold text-gray-700">Education</Label>
                <FormSelect
-                  value={draft.education || "all"}
-                  onChange={(val) => {
-                     setDraft(prev => ({
-                        ...prev,
-                        education: val === "all" ? "" : val
-                     }))
-                  }}
+                  value={draftFilters.education || "all"}
+                  onChange={(val) => updateDraft({ education: val === "all" ? "" : val })}
                   options={EDUCATION_OPTIONS}
                   placeholder="All Education"
                   className="min-h-10 w-full rounded-sm"
@@ -158,16 +116,16 @@ const AdvanceFilterDropdown = ({ filters, setFilter, activeCount }: AdvanceFilte
                <div className="flex items-center gap-2">
                   <Input
                      type="number"
-                     value={draft.salaryMin}
-                     onChange={(e) => setDraft(prev => ({ ...prev, salaryMin: e.target.value }))}
+                     value={draftFilters.salaryMin ?? ""}
+                     onChange={(e) => updateDraft({ salaryMin: e.target.value ? Number(e.target.value) : null  })}
                      placeholder="Min"
                      className="min-h-10 rounded-sm"
                   />
                   <span className="text-gray-400">-</span>
                   <Input
                      type="number"
-                     value={draft.salaryMax}
-                     onChange={(e) => setDraft(prev => ({ ...prev, salaryMax: e.target.value }))}
+                     value={draftFilters.salaryMax ?? ""}
+                     onChange={(e) => updateDraft({ salaryMax: e.target.value ? Number(e.target.value) : null })}
                      placeholder="Max"
                      className="min-h-10 rounded-sm"
                   />
@@ -177,20 +135,16 @@ const AdvanceFilterDropdown = ({ filters, setFilter, activeCount }: AdvanceFilte
             <div className="flex items-center justify-between py-1">
                <Label className="text-[0.8rem] font-semibold text-gray-700">Featured only</Label>
                <Switch
-                  checked={draft.isFeatured}
-                  onCheckedChange={(checked) => {
-                     setDraft(prev => ({ ...prev, isFeatured: checked }))
-                  }}
+                  checked={draftFilters.isFeatured || undefined}
+                  onCheckedChange={(checked) => updateDraft({ isFeatured: checked })}
                   className="data-checked:bg-teal-600 cursor-pointer"
                />
             </div>
             <div className="flex items-center justify-between py-1">
                <Label className="text-[0.8rem] font-semibold text-gray-700">Urgent only</Label>
                <Switch
-                  checked={draft.isUrgent}
-                  onCheckedChange={(checked) => {
-                     setDraft(prev => ({ ...prev, isUrgent: checked }))
-                  }}
+                  checked={draftFilters.isUrgent || undefined}
+                  onCheckedChange={(checked) => updateDraft({ isUrgent: checked })}
                   className="data-checked:bg-teal-600 cursor-pointer"
                />
             </div>
@@ -199,7 +153,7 @@ const AdvanceFilterDropdown = ({ filters, setFilter, activeCount }: AdvanceFilte
                <Button
                   type="button"
                   variant="outline"
-                  onClick={handleReset}
+                  onClick={clearAllFilters}
                   className="flex-1 min-h-10"
                >Reset</Button>
                <Button

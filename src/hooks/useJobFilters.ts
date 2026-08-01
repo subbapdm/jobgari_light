@@ -1,67 +1,44 @@
+import { ADMIN_DEFAULT_FILTERS, adminJobFilterSchema, type AdminJobFilters } from "@/schemas/jobFilterSchema";
 import { useCallback, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 
-export interface JobFilters {
-   search: string;
-   status: string;
-   jobType: string;
-   workMode: string;
-   experience: string;
-   education: string;
-   category: string;
-   location: string;
-   company: string;
-   salaryMin: string;
-   salaryMax: string;
-   isFeatured: string;
-   isUrgent: string;
-   sortBy: string;
-   sortOrder: string;
-   page: string;
-}
 
-const DEFAULT_FILTERS: JobFilters = {
-   search: "",
-   status: "",
-   jobType: "",
-   workMode: "",
-   experience: "",
-   education: "",
-   category: "",
-   location: "",
-   company: "",
-   salaryMin: "",
-   salaryMax: "",
-   isFeatured: "",
-   isUrgent: "",
-   sortBy: "createdAt",
-   sortOrder: "desc",
-   page: "1"
-};
+const NUMERIC_KEYS = ["salaryMin", "salaryMax"] as const;
+const BOOLEAN_KEYS = ["isFeatured", "isUrgent"] as const;
 
 export function useJobFilters(){
    const [searchParams, setSearchParams] = useSearchParams();
 
    const filters = useMemo(() => {
-      const result = { ...DEFAULT_FILTERS };
-      for(const key of Object.keys(DEFAULT_FILTERS) as (keyof JobFilters)[]){
-         const value = searchParams.get(key);
-         if(value !== null) result[key] = value;
-      }
+      const result: Record<string, unknown> = { ...ADMIN_DEFAULT_FILTERS };
       
-      return result;
+      for(const key of Object.keys(ADMIN_DEFAULT_FILTERS) as (keyof AdminJobFilters)[]){
+         const raw = searchParams.get(key);
+         if(raw === null) continue;
+
+         if((NUMERIC_KEYS as readonly string[]).includes(key)){
+            result[key] = Number(raw);
+         } else if ((BOOLEAN_KEYS as readonly string[]).includes(key)){
+            result[key] = raw === "true";
+         } else{
+            result[key] = raw;
+         }
+      }
+     
+      
+      return adminJobFilterSchema.parse(result);
    }, [searchParams]);
 
-   const setFilter = useCallback((updates: Partial<JobFilters>) => {
+   const setFilter = useCallback((updates: Partial<AdminJobFilters>) => {
 
       setSearchParams((prev) => {
          const next = new URLSearchParams(prev);
-
+         
          for(const [key, value] of Object.entries(updates)){
-            if(!value || value === "all"){
+            if(value === null || value === undefined || value === "" || value === "all"){
                next.delete(key);
             } else {
-               next.set(key, value);
+               next.set(key, String(value));
             }
          }
 
@@ -73,7 +50,7 @@ export function useJobFilters(){
       })
    }, [setSearchParams]);
 
-   const clearFilter = useCallback((key: keyof JobFilters) => {
+   const clearFilter = useCallback((key: keyof AdminJobFilters) => {
       setSearchParams((prev) => {
          const next = new URLSearchParams(prev);
          next.delete(key);
