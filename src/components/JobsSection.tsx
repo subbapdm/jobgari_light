@@ -9,8 +9,8 @@ import JobCard from "./JobCard";
 
 const JobsSection = () => {
    const { data, isLoading } = useQuery({
-      queryKey: ["jobs", { status: "active", limit: 6 }],
-      queryFn: () => jobsService.getJobs({ status: "active", limit: "6", sortBy: "createdAt", sortOrder: "desc" }),
+      queryKey: ["jobs", { status: "active", limit: 10 }],
+      queryFn: () => jobsService.getJobs({ status: "active", limit: "8", sortBy: "createdAt", sortOrder: "desc" }),
       select: (res) => res.data
    });
 

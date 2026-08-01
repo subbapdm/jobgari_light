@@ -5,9 +5,10 @@ import FormSelect from "../form/FormSelect";
 
 import { useCallback, useMemo, useState } from "react";
 import CheckboxGroup from "../form/CheckboxGroup";
-import { JOB_TYPES } from "@/constants/jobEnums";
+import { EXPERIENCE_LEVELS, JOB_TYPES, WORK_MODES } from "@/constants/jobEnums";
 import { Input } from "../ui/input";
 import type { PublicJobFilters } from "@/schemas/jobFilterSchema";
+import { ListFilter } from "lucide-react";
 
 
 
@@ -46,12 +47,19 @@ const FiltersSidebar = ({ filters, onChange, onClear }: FiltersSidebarProps) => 
       })
    }, [salary, onChange]);
 
+   const { page, sortBy, sortOrder, status, ...filtersRest} = filters;
+   const activeCount = Object.values(filtersRest).reduce<number>((acc, val) => 
+      acc + (Array.isArray(val) ? val.length : val != null && val !== "" ? 1 : 0), 0
+   );
 
    return (
-      <aside className="w-full lg:w-80 bg-white rounded-lg p-5 h-fit lg:sticky lg:top-24">
+      <aside className="w-full lg:w-80 bg-white rounded-lg p-5 h-fit lg:sticky lg:top-24 border border-slate-100">
          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-            <h3 className="font-semibold text-slate-800">All Filters</h3>
-            <Button type="button" onClick={onClear} variant="link" className="text-xs text-teal-600 hover:text-teal-700 cursor-pointer rounded-sm">
+            <div className="flex items-center gap-2">
+               <ListFilter size={16} />
+               <h3 className="text-xs md:text-sm font-semibold text-slate-800">Filters ({activeCount})</h3>
+            </div>
+            <Button type="button" onClick={onClear} variant="link" className="text-[0.75rem] text-teal-600 font-semibold hover:text-teal-700 cursor-pointer rounded-sm hover:no-underline">
                Clear All
             </Button>
          </div>
@@ -67,10 +75,24 @@ const FiltersSidebar = ({ filters, onChange, onClear }: FiltersSidebarProps) => 
          </div>
 
          <CheckboxGroup
-            title="Job Type"
+            title="Work Type"
             options={JOB_TYPES}
             value={filters.jobType}
             onChange={(selected) => onChange({ jobType: selected })}
+         />
+
+         <CheckboxGroup
+            title="Experience"
+            options={EXPERIENCE_LEVELS}
+            value={filters.experience}
+            onChange={(selected) => onChange({ experience: selected })}
+         />
+
+         <CheckboxGroup
+            title="Work Mode"
+            options={WORK_MODES}
+            value={filters.workMode}
+            onChange={(selected) => onChange({ workMode: selected })}
          />
 
          <div className="space-y-2.5 pt-4">
@@ -104,7 +126,7 @@ const FiltersSidebar = ({ filters, onChange, onClear }: FiltersSidebarProps) => 
                variant="outline"
                className="w-full min-h-11 text-sm bg-teal-600 text-white hover:bg-teal-700 hover:text-white rounded-sm"
             >
-               Apply
+               Apply Salary
             </Button>
          </div>
       </aside>

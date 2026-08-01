@@ -37,7 +37,7 @@ const CheckboxGroup = ({ title, options, value = [], onChange }: CheckboxGroupPr
                         id={optLabel}
                         checked={value.includes(optValue)}
                         onCheckedChange={(checked) => handleToggle(optValue, Boolean(checked))}
-                        className="size-6 data-[state=checked]:bg-teal-600 data-[state=checked]:border-teal-600"
+                        className="size-5 data-[state=checked]:bg-teal-600 data-[state=checked]:border-teal-600"
                      />
                      {optLabel}
                   </Label>

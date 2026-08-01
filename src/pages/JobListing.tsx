@@ -1,10 +1,13 @@
 import Container from '@/components/Container';
 import JobCard from '@/components/JobCard';
 import FiltersSidebar from '@/components/jobs/FiltersSidebar';
+import JobCardSkeleton from '@/components/skeletons/JobCardSkeleton';
+import { Button } from '@/components/ui/button';
 import { PUBLIC_DEFAULT_FILTERS, type PublicJobFilters } from '@/schemas/jobFilterSchema';
 import { jobsService } from '@/services/jobService';
 import { useQuery } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
+import { LayoutGrid, List, SearchX } from 'lucide-react';
+import { useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 
@@ -15,6 +18,7 @@ const getArrayParam = (paramValue: string | null): string[] => {
 
 const JobListing = () => {
    const [ searchParams, setSearchParams ] = useSearchParams();
+   const [view, setView] = useState<"grid" | "list">("grid");
 
    // Simplified version of useJobFilters hook
    const filters: PublicJobFilters = useMemo(() => {
@@ -74,13 +78,14 @@ const JobListing = () => {
    }, [setSearchParams]);
 
 
-   const { data, } = useQuery({
+   const { data, isLoading } = useQuery({
       queryKey: ["jobs", filters],
       queryFn: () => jobsService.getJobs(filters),
       staleTime: 60 * 1000
    });
 
    const jobs = data?.data ?? [];
+   const gridClass = view === "grid" ? "grid grid-cols-1 sm:grid-cols-2 gap-4" : "grid grid-cols-1 gap-3";
 
    return (
       <Container>
@@ -90,13 +95,43 @@ const JobListing = () => {
                onChange={setFilters}
                onClear={clearFilters}
             />
-            <div className='flex-1 bg-white p-4'>
-               <div>
-                  <p className='text-sm text-gray-400'>223 total results found</p>
+            <div className='flex-1 p-4'>
+               <div className='flex items-center justify-between py-4'>
+                  <div>
+                     <p className='text-xs text-gray-400'>
+                        {isLoading ? "Searching..." : `${jobs.length} total jobs found`}
+                     </p>
+                  </div>
+                  <div className='flex overflow-hidden rounded-md border border-slate-200 bg-white gap-0.5 p-1'>
+                     <Button variant="ghost" onClick={() => setView("grid")} aria-pressed={view === "grid"} className={`rounded-sm ${view === "grid" ? "bg-teal-600 text-white hover:bg-teal-700 hover:text-white" : "text-gray-400"}`}>
+                        <LayoutGrid className='size-4'/>
+                     </Button>
+                     <Button variant="ghost" onClick={() => setView("list")} aria-pressed={view === "list"} className={`rounded-sm ${view === "list" ? "bg-teal-600 text-white hover:bg-teal-700 hover:text-white" : "text-gray-400"}`}>
+                        <List className='size-4' />
+                     </Button>
+                  </div>
                </div>
-               <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+
+               <div className={gridClass}>
+                  {isLoading && Array.from({ length: 6 }).map((_, i) => <JobCardSkeleton key={i} />)}
+
+                  {!isLoading && jobs.length === 0 && (
+                     <div className='col-span-full flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 bg-white px-6 py-16 text-center'>
+                        <div className='flex size-10 items-center justify-center rounded-full bg-slate-50'>
+                           <SearchX className='size-5 text-slate-400' />
+                        </div>
+                        <h3 className='mt-4 text-base font-bold text-slate-800'>No jobs match these filters</h3>
+                        <p className='mt-4 max-w-sm text-sm text-slate-400'>
+                           Trying widening your salary range or removing a filter - new roles are posted daily.
+                        </p>
+                        <Button onClick={clearFilters} className='mt-5 bg-teal-600 text-white hover:bg-teal-700'>
+                           Clear all filters
+                        </Button>
+                     </div>
+                  )}
+
                   {jobs.map((job) => (
-                     <JobCard job={job} />
+                     <JobCard job={job} compact={view === "list"} />
                   ))}
                </div>
             </div>
