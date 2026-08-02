@@ -7,7 +7,7 @@ const MainLayout = () => {
    const { user, isAuthenticated, authInitialized } = useAuthStore();
 
    return (
-      <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 gap-8">
+      <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
          {/* NAVBAR */}
          <Navbar user={user!} isAuthenticated={isAuthenticated}ready={authInitialized} />
          <main className="flex-1">

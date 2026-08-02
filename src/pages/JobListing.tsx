@@ -91,7 +91,7 @@ const JobListing = () => {
 
    return (
       <Container>
-         <div className='flex gap-4'>
+         <div className='flex gap-4 py-8'>
             <FiltersSidebar 
                filters={filters} 
                onChange={setFilters}

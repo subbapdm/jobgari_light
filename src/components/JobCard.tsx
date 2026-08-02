@@ -21,7 +21,7 @@ const JobCard = ({ job, saved = false, compact = false }: JobCardProps) => {
    const salary = formatSalary(job.salary);
 
    return (
-      <div className="group relative flex flex-col gap-4 rounded-xl border border-slate-100 bg-white p-5 transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-8px_rgba(15, 118, 110, 0.18)]">
+      <div className="group relative flex flex-col gap-4 rounded-xl border border-slate-100 bg-white p-5 transition-all duration-150 hover:-translate-y-0.5">
       
          <Link to={`/jobs/${job.slug}`} aria-label={`View ${job.title} at ${job.company?.name}`} className="absolute inset-0 z-0 rounded-xl" />
             
@@ -80,7 +80,7 @@ const JobCard = ({ job, saved = false, compact = false }: JobCardProps) => {
 
                <div className="relative z-10 flex flex-wrap gap-1.5">
                   {visibleSkills.map((skill, i) => (
-                     <span key={`${skill.toLowerCase()}-${i}`} className="rounded-md bg-slate-100 px-2 py-1 text-[0.7rem] font-medium text-slate-700">
+                     <span key={`${skill.toLowerCase()}-${i}`} className="rounded-full bg-slate-50 px-2.5 py-1 text-[0.7rem] font-semibold text-slate-700">
                         {skill}
                      </span>
                   ))}

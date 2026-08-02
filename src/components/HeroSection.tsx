@@ -1,6 +1,5 @@
 
-
-import { ArrowRight, Briefcase, GraduationCap, Home, MapPin, Search, ShoppingBag, Wand2 } from "lucide-react";
+import { Briefcase, ChevronRight, GraduationCap, Home, MapPin, Search, ShoppingBag, Wand2 } from "lucide-react";
 import Container from "./Container";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -27,7 +26,7 @@ const HeroSection = () => {
 
                   {/* SEARCH BAR */}
                   <div className="max-w-3xl mx-auto">
-                     <div className="flex items-center gap-2 bg-white rounded-full border border-slate-200 shadow-sm p-2">
+                     <div className="flex items-center gap-2 bg-white rounded-full shadow-[0_5px_10px_-4px_rgba(15,118,110,0.18)] p-2">
                         <div className="flex items-center flex-1 gap-2 px-3">
                            <Search className="size-4 text-slate-400 shrink-0" />
                            <Input
@@ -50,12 +49,16 @@ const HeroSection = () => {
                   </div>
 
                   {/* TRENDING CATEGORIES */}
-                  <div className="flex flex-wrap items-center justify-center gap-3">
+                  <div className="flex flex-wrap items-center justify-center gap-4">
                      {TEMP_CATEGORIES.map(({ label, icon: Icon }) => (
-                        <button key={label} type="button" className="group flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 bg-white/60 hover:bg-white hover:bg-teal-300 text-sm font-medium text-slate-600 transition-colors cursor-pointer">
-                           <Icon className="size-4" />
-                           <span>{label}</span>
-                           <ArrowRight className="size-3.5 text-slate-400 group-hover:text-teal-600 transition-colors"/>
+                        <button key={label} type="button" className="w-[180px] h-[60px] group flex items-center justify-between gap-2 p-3 rounded-md bg-white hover:bg-white hover:bg-teal-300 text-slate-600 transition-colors cursor-pointer hover:shadow-[0_8px_8px_-4px_rgba(15,118,110,0.18)] transition-all">
+                           <div className="flex items-center gap-2">
+                              <span className="size-10 bg-teal-50 rounded-full flex items-center justify-center text-teal-600">
+                                 <Icon className="size-5" />
+                              </span>
+                              <span className="text-[1rem] font-medium line-clamp-1">{label}</span>
+                           </div>
+                           <ChevronRight className="size-5 text-slate-400 group-hover:text-teal-600 transition-colors"/>
                         </button>
                      ))}
                   </div>

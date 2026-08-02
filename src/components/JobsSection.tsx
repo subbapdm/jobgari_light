@@ -10,7 +10,7 @@ import JobCard from "./JobCard";
 const JobsSection = () => {
    const { data, isLoading } = useQuery({
       queryKey: ["jobs", { status: "active", limit: 10 }],
-      queryFn: () => jobsService.getJobs({ status: "active", limit: "8", sortBy: "createdAt", sortOrder: "desc" }),
+      queryFn: () => jobsService.getJobs({ status: "active", limit: "6", sortBy: "createdAt", sortOrder: "desc" }),
       select: (res) => res.data
    });
 
@@ -53,7 +53,7 @@ const JobsSection = () => {
                </Button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                {data.map((job) => (
                   <JobCard key={job._id} job={job} />
                ))}

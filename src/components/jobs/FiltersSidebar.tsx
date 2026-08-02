@@ -23,7 +23,6 @@ interface FiltersSidebarProps{
 
 
 const FiltersSidebar = ({ filters, onChange, onClear }: FiltersSidebarProps) => {
-   const [keyword, setKeyword] = useState(filters.keyword);
 
    const [salary, setSalary] = useState<{ min: number | null; max: number | null }>({
       min: filters.salaryMin,

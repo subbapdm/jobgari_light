@@ -1,6 +1,7 @@
 
 import HeroSection from "@/components/HeroSection";
 import JobsSection from "@/components/JobsSection";
+import PromoSection from "@/components/PromoSection";
 
 
 const HomePage = () => {
@@ -8,6 +9,7 @@ const HomePage = () => {
       <>
          <HeroSection />
          <JobsSection />
+         <PromoSection />
       </>
    )
 }
