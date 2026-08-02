@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Bookmark, BriefcaseBusiness, Clock, Flame, MapPin } from "lucide-react";
+import { Bookmark, BriefcaseBusiness, Clock, Flame, GraduationCap, MapPin } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 import type { Job } from "@/types/job.types";
@@ -42,43 +42,55 @@ const JobCard = ({ job, saved = false, compact = false }: JobCardProps) => {
                </div>
             </div>
 
-            <button type="button" onClick={() => {}} aria-pressed={saved} aria-label={saved ? "Remove from saved jobs" : "Save job"} className={cn("relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-slate-50")}>
+            <button type="button" onClick={() => {}} aria-pressed={saved} aria-label={saved ? "Remove from saved jobs" : "Save job"} className={cn("relative z-10 flex size-10 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-slate-50 text-slate-400 hover:text-slate-500 cursor-pointer")}>
                <Bookmark className="size-5" fill={saved ? "currentColor" : "none"} />
             </button>
          </div>
 
-         <h3 className="relative z-10 line-clamp-1 text-lg font-bold leading-snug text-slate-800 transition-colors group-hover:text-teal-700">
-            {job.title}
-         </h3>
+         <div className={cn("grid gap-2", compact ? "grid-cols-2" : "grid-cols-1")}>
+            <div className="space-y-2">
+               <h3 className="relative z-10 line-clamp-1 text-lg font-bold leading-snug text-slate-800 transition-colors group-hover:text-teal-700">
+                  {job.title}
+               </h3>
+               <div className="relative z-10 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
+                  <span className="flex items-center gap-1.5 capitalize">
+                     <GraduationCap className="size-3.5" />
+                     {job.education}
+                  </span>
+                  <span className="flex items-center gap-1.5 capitalize">
+                     <BriefcaseBusiness className="size-3.5" />
+                     {job.jobType}
+                  </span>
+               </div>
+            </div>
 
-         <div className="relative z-10 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
-            <span className="flex items-center gap-1.5 capitalize">
-               <BriefcaseBusiness className="size-3.5" />
-               {job.jobType}
-            </span>
-            <span className="flex items-center gap-1.5 capitalize">
-               <Clock className="size-3.5" />
-               {job.workMode}
-            </span>
-            {job.location?.city && (
-               <span className="flex items-center gap-1.5">
-                  <MapPin className="size-3.5" />
-                  {job.location.city}
-               </span>
-            )}
-         </div>
+            <div className="space-y-4">
+               <div className="relative z-10 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
+                  {job.location?.city && (
+                     <span className="flex items-center gap-1.5">
+                        <MapPin className="size-3.5" />
+                        {job.location.city}
+                     </span>
+                  )}
+                  <span className="flex items-center gap-1.5 capitalize">
+                     <Clock className="size-3.5" />
+                     {job.workMode}
+                  </span>
+               </div>
 
-         <div className="relative z-10 flex flex-wrap gap-1.5">
-            {visibleSkills.map((skill, i) => (
-               <span key={`${skill.toLowerCase()}-${i}`} className="rounded-md bg-slate-100 px-2 py-1 text-[0.7rem] font-medium text-slate-700">
-                  {skill}
-               </span>
-            ))}
-            {extraCount > 0 && (
-               <span className="rounded-md bg-slate-50 px-2 py-1 text-[0.7rem] font-medium text-slate-400">
-                  +{extraCount} more
-               </span>
-            )}
+               <div className="relative z-10 flex flex-wrap gap-1.5">
+                  {visibleSkills.map((skill, i) => (
+                     <span key={`${skill.toLowerCase()}-${i}`} className="rounded-md bg-slate-100 px-2 py-1 text-[0.7rem] font-medium text-slate-700">
+                        {skill}
+                     </span>
+                  ))}
+                  {extraCount > 0 && (
+                     <span className="rounded-md bg-slate-50 px-2 py-1 text-[0.7rem] font-medium text-slate-400">
+                        +{extraCount} more
+                     </span>
+                  )}
+               </div>
+            </div>
          </div>
 
          <div className="relative z-10 mt-auto flex items-center justify-between border-t border-slate-50 pt-3">

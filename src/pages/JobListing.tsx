@@ -3,10 +3,12 @@ import JobCard from '@/components/JobCard';
 import FiltersSidebar from '@/components/jobs/FiltersSidebar';
 import JobCardSkeleton from '@/components/skeletons/JobCardSkeleton';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 import { PUBLIC_DEFAULT_FILTERS, type PublicJobFilters } from '@/schemas/jobFilterSchema';
 import { jobsService } from '@/services/jobService';
 import { useQuery } from '@tanstack/react-query';
-import { LayoutGrid, List, SearchX } from 'lucide-react';
+import { LayoutGrid, List, Search, SearchX } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
@@ -89,30 +91,46 @@ const JobListing = () => {
 
    return (
       <Container>
-         <div className='flex gap-6'>
+         <div className='flex gap-4'>
             <FiltersSidebar 
                filters={filters} 
                onChange={setFilters}
                onClear={clearFilters}
             />
-            <div className='flex-1 p-4'>
-               <div className='flex items-center justify-between py-4'>
+            <div className='flex-1'>
+               <div className='space-y-4'>
+                  
+                  <div className='flex items-center justify-between gap-4'>
+                     <div className='flex-1'>
+                        <div className="relative max-w-xl xl:max-w-2xl flex-2">
+                           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+                           <Input
+                              placeholder="Search Jobs..."
+                              value={filters.keyword}
+                              onChange={(e) => setFilters({ keyword: e.target.value})}
+                              className="w-full pl-9 min-h-11 rounded-sm bg-white border border-slate-100 focus-visible:border focus-visible:border-teal-400 focus-visible:ring-1 focus-visible:ring-teal-400"
+                           />
+                        </div>
+                     </div>
+                     
+                     <div className='flex overflow-hidden rounded-md border border-slate-100 bg-white gap-0.5 p-1'>
+                        <Button variant="ghost" onClick={() => setView("grid")} aria-pressed={view === "grid"} className={`rounded-sm ${view === "grid" ? "bg-teal-600 text-white hover:bg-teal-700 hover:text-white" : "text-gray-400"}`}>
+                           <LayoutGrid className='size-4'/>
+                        </Button>
+                        <Button variant="ghost" onClick={() => setView("list")} aria-pressed={view === "list"} className={`rounded-sm ${view === "list" ? "bg-teal-600 text-white hover:bg-teal-700 hover:text-white" : "text-gray-400"}`}>
+                           <List className='size-4' />
+                        </Button>
+                     </div>
+                  </div>
                   <div>
                      <p className='text-xs text-gray-400'>
                         {isLoading ? "Searching..." : `${jobs.length} total jobs found`}
                      </p>
                   </div>
-                  <div className='flex overflow-hidden rounded-md border border-slate-200 bg-white gap-0.5 p-1'>
-                     <Button variant="ghost" onClick={() => setView("grid")} aria-pressed={view === "grid"} className={`rounded-sm ${view === "grid" ? "bg-teal-600 text-white hover:bg-teal-700 hover:text-white" : "text-gray-400"}`}>
-                        <LayoutGrid className='size-4'/>
-                     </Button>
-                     <Button variant="ghost" onClick={() => setView("list")} aria-pressed={view === "list"} className={`rounded-sm ${view === "list" ? "bg-teal-600 text-white hover:bg-teal-700 hover:text-white" : "text-gray-400"}`}>
-                        <List className='size-4' />
-                     </Button>
-                  </div>
+
                </div>
 
-               <div className={gridClass}>
+               <div className={cn("mt-4", gridClass)}>
                   {isLoading && Array.from({ length: 6 }).map((_, i) => <JobCardSkeleton key={i} />)}
 
                   {!isLoading && jobs.length === 0 && (
